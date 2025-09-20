@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Deatil</title>
+</head>
+<body>
+    <h2>Complaint Detail</h2>
+
+    <p><strong>From:</strong> {{ issue_detail.user.username }}</p>
+    <p><strong>Title:</strong> {{ issue_detail.title }}</p>
+    <p><strong>Description:</strong> {{ issue_detail.description }}</p>
+    <p><strong>Priority:</strong> {{ issue_detail.get_priority_display }}</p>
+    <p><strong>Status:</strong> {{ issue_detail.status }}</p>
+    <p><strong>Date Submitted:</strong> {{ issue_detail.date_submitted }}</p>
+
+    <a href="{% url 'chatisha_kca:issue-respond' issue_detail.pk %}">
+        <button type="button">Respond</button>
+    </a>
+
+     <a href="{% url 'chatisha_kca:forward-issue' issue_detail.pk %}">
+        <button type="button">Forward</button>
+    </a>
+     <p><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard' %}">Back to Dashboard</a></p>
+    
+</body>
+</html>

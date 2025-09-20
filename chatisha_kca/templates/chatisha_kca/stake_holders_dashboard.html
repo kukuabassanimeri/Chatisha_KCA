@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+</head>
+
+<body>
+    <p>Hello {{ user.username }} you are logged in as {{ user.get_role_display }}</p>
+    <!-- get_FIELNAME_display to show the human-readable value. -->
+
+    <div>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard' %}">All Concerns</a></li>
+                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'pending' %}">Pending</a></li>
+                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'resolved' %}">Resolved</a></li>
+                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'forwarded' %}">Forwarded</a></li>
+                <li><a href="{% url 'chatisha_kca:submit-issue' %}">Submit New Concern</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div>
+        <h2>DASHBOARD</h2>
+        <div>
+            Pending
+        </div>
+
+        <div>
+            Resolved
+        </div>
+
+        <div>
+            Forwarded
+        </div>
+    </div>
+
+    <h3>My Submitted Issues</h3>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Department</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date Submitted</th>
+            <th></th>
+            <th>Action</th>
+        </tr>
+        {% for issue in my_issues %}
+        <tr>
+            <td>{{ issue.get_department_display }}</td>
+            <td>{{ issue.title }}</td>
+            <td>{{ issue.description }}</td>
+            <td>{{ issue.priority }}</td>
+            <td>{{ issue.status }}</td>
+            <td>{{ issue.date_submitted }}</td>
+            
+            <td>
+                {% if issue.response %}
+                    <strong>Response: <br></strong> {{ issue.response }} <br>
+                <small>
+                    By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
+                </small>
+                {% elif issue.status == "pending" %}
+                <small>
+                    Waiting for response <br>
+                </small>
+                {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
+                    <strong>Forwarding History</strong> <br>
+
+                {% for f in issue.forwarding_history.all %}
+                    Forwarded by {{ f.forwarded_by.get_role_display }}
+                → {{ f.forwarded_to.get_role_display }}
+
+                {% if f.note %} <br>Reason: {{ f.note }}{% endif %}<br>
+                    On: {{ f.date_forwarded }}
+                {% endfor %}
+                {% endif %}
+            </td>
+            <td><button>delete</button></td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No issues submitted yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

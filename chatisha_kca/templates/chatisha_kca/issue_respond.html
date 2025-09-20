@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>Respond</h3>
+    <form method="post">
+        {% csrf_token %}
+        <label for="response">Response:</label><br>
+        <textarea id="response" name="response" rows="4" cols="50"></textarea><br><br>
+
+        <label for="status">Status</label>
+        <select id="status" name="status">
+            <option value="pending">Pending</option>
+            <option value="resolved">Resolved</option>
+            <option value="forwarded">Forwarded</option>
+        </select><br><br>
+
+        <button type="submit">Submit Response</button>
+    </form>
+</body>
+
+</html>

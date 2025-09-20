@@ -1,0 +1,8 @@
+.env
+ckca/
+__pycache__/
+db.sqlite3
+*.log
+/media/
+staticfiles/
+*.pyc
