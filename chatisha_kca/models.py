@@ -44,13 +44,14 @@ STATUS_CHOICES = [
     ('pending', 'Pending'),
     ('resolved', 'Resolved'),
     ('forwarded', 'Forwarded'),
+    ('faq', 'FAQ'),
 ]
 
 # ISSUE SUBMISSION FORM
 class IssueSubmissionModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # USER WHO SUBMITTED THE ISSUE
-    department = models.CharField(max_length=50, choices=DEPARTMENT_CHOICES)
-    title = models.CharField()
+    department = models.CharField(max_length=255, choices=DEPARTMENT_CHOICES)
+    title = models.CharField(max_length=255)
     description = models.TextField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
     date_submitted = models.DateTimeField(default=timezone.now)
@@ -82,4 +83,4 @@ class ForwardingHistoryModel(models.Model):
 
     def __str__(self):
         return f"{self.forwarded_by} → {self.forwarded_to} ({self.issue.title})"
-
+    

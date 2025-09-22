@@ -58,22 +58,39 @@ def StakerHoldersDashboard(request, filter_by=None):
     # DISPLAY MY SUBMITTED ISSUES
     my_issues = IssueSubmissionModel.objects.filter(user = user).order_by('-date_submitted')
     
+    
     # FILTER OUT ISSUES BASED ON STATUS
-    if filter_by == "pending":
-        my_issues = my_issues.filter(status="pending")
-    elif filter_by == "resolved":
-        my_issues = my_issues.filter(status="resolved")
-    elif filter_by == "forwarded":
-        my_issues = my_issues.filter(status="forwarded")
+    if filter_by == 'pending':
+        my_issues = my_issues.filter(status = 'pending')
+    elif filter_by == 'resolved':
+        my_issues = my_issues.filter(status = 'resolved')
+    elif filter_by == 'forwarded':
+        my_issues = my_issues.filter(status = 'forwarded')
+    
+    # Resolved issues moved to FAQ
+    elif filter_by == 'faq':
+        my_issues = IssueSubmissionModel.objects.filter(status="faq").order_by('-date_submitted')
     else:
         pass
         
     return render(request, 'chatisha_kca/stake_holders_dashboard.html', {
         'my_issues' : my_issues, 
-        'filter_by': filter_by or 'all'
+        'filter_by': filter_by or 'all',
     })
 
-
+# STAKE HOLDERS CAN DELETE THE RESOLVED ISSUES, AND THE ISSUE IS STORED IN FAQ
+def DeleteResolvedIssue(request, pk):
+    resolved_issue = get_object_or_404(IssueSubmissionModel, pk = pk)
+    if resolved_issue.status == 'resolved':
+        if request.method == 'POST':
+            
+            resolved_issue.status = "faq"
+            resolved_issue.save()
+            messages.success(request, 'Issue moved to FAQ successfully')
+            return redirect('chatisha_kca:stake-holders-dashboard-filter', filter_by='faq')
+    return render(request, 'chatisha_kca/delete_resolved_issue.html', {'resolved_issue': resolved_issue})
+        
+        
 # DEAN, VC & HoD DASHBOARD
 @role_required(['dean_sot', 'dean_sob', 'dean_student', 'dean_school_of_education_art', 'head_of_department', 'vc'])
 def DeanVcHoDDashboard(request, filter_by=None):

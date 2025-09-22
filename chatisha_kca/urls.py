@@ -11,8 +11,8 @@ urlpatterns = [
     path('logout/', views.UserLogout, name='logout'),
     
     # DASHBOARD URLS
-    path('stakerholdersdashboard/', views.StakerHoldersDashboard, name='staker-holders-dashboard'),
-    path('stakerholdersdashboard/<str:filter_by>/', views.StakerHoldersDashboard, name='staker-holders-dashboard-filter'),
+    path('stakerholdersdashboard/', views.StakerHoldersDashboard, name='stake-holders-dashboard'),
+    path('stakerholdersdashboard/<str:filter_by>/', views.StakerHoldersDashboard, name='stake-holders-dashboard-filter'),
     
     path('deanvchoddashboard/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard'),
     path('deanvchoddashboard/<str:filter_by>/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard-filter'),
@@ -24,6 +24,7 @@ urlpatterns = [
     # ACTION ON ISSUE
     path('issuerespond/<int:pk>/', views.IssueRespond, name='issue-respond'),
     path('forwardissue/<int:pk>/', views.ForwardIssue, name='forward-issue'),
+    path('deleteresolvedissue/delete/<int:pk>/', views.DeleteResolvedIssue, name='delete-resolved-issue'),
     
     
     

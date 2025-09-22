@@ -15,12 +15,12 @@
         <nav>
             <ul>
                 <li><a href="#">Dashboard</a></li>
-                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard' %}">All Concerns</a></li>
-                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'pending' %}">Pending</a></li>
-                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'resolved' %}">Resolved</a></li>
-                <li><a href="{% url 'chatisha_kca:staker-holders-dashboard-filter' 'forwarded' %}">Forwarded</a></li>
+                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard' %}">All Concerns</a></li>
+                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'pending' %}">Pending</a></li>
+                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}">Resolved</a></li>
+                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}">Forwarded</a></li>
                 <li><a href="{% url 'chatisha_kca:submit-issue' %}">Submit New Concern</a></li>
-                <li><a href="#">FAQ</a></li>
+                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'faq' %}">FAQ</a></li>
                 <li><a href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
             </ul>
         </nav>
@@ -50,7 +50,7 @@
             <th>Priority</th>
             <th>Status</th>
             <th>Date Submitted</th>
-            <th></th>
+            <th>Response</th>
             <th>Action</th>
         </tr>
         {% for issue in my_issues %}
@@ -64,7 +64,7 @@
             
             <td>
                 {% if issue.response %}
-                    <strong>Response: <br></strong> {{ issue.response }} <br>
+                    {{ issue.response }} <br>
                 <small>
                     By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
                 </small>
@@ -84,7 +84,13 @@
                 {% endfor %}
                 {% endif %}
             </td>
-            <td><button>delete</button></td>
+            <td>
+                {% if issue.status == "resolved" %}
+                    <a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}">
+                        <button>Delete</button>
+                    </a>
+                {% endif %}
+            </td>
 
         </tr>
         {% empty %}

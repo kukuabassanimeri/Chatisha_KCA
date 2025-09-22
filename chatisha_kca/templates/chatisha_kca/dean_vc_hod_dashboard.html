@@ -52,6 +52,7 @@
             <th>Status</th>
             <th>Date Submitted</th>
             <th>Action</th>
+            <th>Response</th>
         </tr>
         {% for issue in submitted_issues %}
         <tr>
@@ -70,7 +71,7 @@
 
             <td>
                 {% if issue.response %}
-                    <strong>Response: <br></strong> {{ issue.response }} <br>
+                    {{ issue.response }} <br>
                 <small>
                     By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
                 </small>

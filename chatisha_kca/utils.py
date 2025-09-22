@@ -3,10 +3,10 @@ from django.shortcuts import redirect
 # REDIRECT USERS BASED ON ROLES
 def RedirectBasedOnRole(user):
     role_redirects = {
-        'student': 'chatisha_kca:staker-holders-dashboard',
-        'parent': 'chatisha_kca:staker-holders-dashboard',
-        'sponsor': 'chatisha_kca:staker-holders-dashboard',
-        'non_teaching_staff': 'chatisha_kca:staker-holders-dashboard',
+        'student': 'chatisha_kca:stake-holders-dashboard',
+        'parent': 'chatisha_kca:stake-holders-dashboard',
+        'sponsor': 'chatisha_kca:stake-holders-dashboard',
+        'non_teaching_staff': 'chatisha_kca:stake-holders-dashboard',
         
         # DEAN, VC, HEAD OF DEPARTMENT TO BE REDIRECTED TO ONE DASHBOARD ON LOGIN
         'dean_sot': 'chatisha_kca:dean-vc-hod-dashboard',
