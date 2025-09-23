@@ -44,14 +44,13 @@ STATUS_CHOICES = [
     ('pending', 'Pending'),
     ('resolved', 'Resolved'),
     ('forwarded', 'Forwarded'),
-    ('faq', 'FAQ'),
 ]
 
 # ISSUE SUBMISSION FORM
 class IssueSubmissionModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # USER WHO SUBMITTED THE ISSUE
     department = models.CharField(max_length=255, choices=DEPARTMENT_CHOICES)
-    title = models.CharField(max_length=255)
+    title = models.CharField()
     description = models.TextField()
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
     date_submitted = models.DateTimeField(default=timezone.now)
@@ -70,6 +69,10 @@ class IssueSubmissionModel(models.Model):
         User, on_delete=models.SET_NULL, null=True, blank=True, related_name="current_issues"
     )
     
+    # MOVE DELETED ISSUE TO FAQ 
+    moved_to_faq = models.BooleanField(default=False)
+    
+    
     def __str__(self):
         return f"{self.user}, {self.title}, {self.department}"
 
@@ -84,3 +87,10 @@ class ForwardingHistoryModel(models.Model):
     def __str__(self):
         return f"{self.forwarded_by} → {self.forwarded_to} ({self.issue.title})"
     
+# FAQ MODEL
+class FAQModel(models.Model):
+    question = models.TextField() # The original question description.
+    answer = models.TextField() # The resolved respond.
+    
+    def __str__(self):
+        return self.question[:50]

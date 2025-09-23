@@ -26,17 +26,10 @@
 
     <div>
         <h2>DASHBOARD</h2>
-        <div>
-            Pending
-        </div>
-
-        <div>
-            Resolved
-        </div>
-
-        <div>
-            Forwarded
-        </div>
+        <p>All Concerns: <small>{{ total_issue }}</small></p>
+        <p>Pending: <small>{{ total_pending }}</small></p>
+        <p>Resolved: <small>{{ total_resolved }}</small></p>
+        <p>Forwarded: <small>{{ total_forwarded }}</small></p>
     </div>
 
     <!--ALL SUBMITTED ISSUES-->
@@ -71,7 +64,7 @@
 
             <td>
                 {% if issue.response %}
-                    {{ issue.response }} <br>
+                {{ issue.response }} <br>
                 <small>
                     By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
                 </small>
@@ -80,14 +73,14 @@
                     Waiting for response <br>
                 </small>
                 {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-                    <strong>Forwarding History</strong> <br>
+                <strong>Forwarding History</strong> <br>
 
                 {% for f in issue.forwarding_history.all %}
-                    Forwarded by {{ f.forwarded_by.get_role_display }}
+                Forwarded by {{ f.forwarded_by.get_role_display }}
                 → {{ f.forwarded_to.get_role_display }}
 
                 {% if f.note %} <br>Reason: {{ f.note }}{% endif %}<br>
-                    On: {{ f.date_forwarded }}
+                On: {{ f.date_forwarded }}
                 {% endfor %}
                 {% endif %}
             </td>

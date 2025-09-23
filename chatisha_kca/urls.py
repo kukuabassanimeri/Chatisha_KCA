@@ -26,6 +26,10 @@ urlpatterns = [
     path('forwardissue/<int:pk>/', views.ForwardIssue, name='forward-issue'),
     path('deleteresolvedissue/delete/<int:pk>/', views.DeleteResolvedIssue, name='delete-resolved-issue'),
     
+    # FAQ
+    path('faq/', views.FAQList, name='faq'),
+
+    
     
     
 ]

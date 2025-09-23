@@ -20,7 +20,7 @@
                 <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}">Resolved</a></li>
                 <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}">Forwarded</a></li>
                 <li><a href="{% url 'chatisha_kca:submit-issue' %}">Submit New Concern</a></li>
-                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'faq' %}">FAQ</a></li>
+                <li><a href="{% url 'chatisha_kca:faq' %}">FAQ</a></li>
                 <li><a href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
             </ul>
         </nav>
@@ -28,17 +28,10 @@
 
     <div>
         <h2>DASHBOARD</h2>
-        <div>
-            Pending
-        </div>
-
-        <div>
-            Resolved
-        </div>
-
-        <div>
-            Forwarded
-        </div>
+        <p>All Concerns: <small>{{ total_issue }}</small></p>
+        <p>Pending: <small>{{ total_pending_issue }}</small></p>
+       <p>Resolved: <small>{{ total_resolved_issue }}</small></p>
+        <p>Forwarded: <small>{{ total_forwarded_issue }}</small></p>
     </div>
 
     <h3>My Submitted Issues</h3>
@@ -73,8 +66,7 @@
                     Waiting for response <br>
                 </small>
                 {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-                    <strong>Forwarding History</strong> <br>
-
+                    
                 {% for f in issue.forwarding_history.all %}
                     Forwarded by {{ f.forwarded_by.get_role_display }}
                 → {{ f.forwarded_to.get_role_display }}
@@ -84,13 +76,7 @@
                 {% endfor %}
                 {% endif %}
             </td>
-            <td>
-                {% if issue.status == "resolved" %}
-                    <a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}">
-                        <button>Delete</button>
-                    </a>
-                {% endif %}
-            </td>
+            <td><a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}"><button>delete</button></a></td>
 
         </tr>
         {% empty %}

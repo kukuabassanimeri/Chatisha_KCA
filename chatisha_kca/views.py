@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .utils import RedirectBasedOnRole, ROLE_TO_DEPARTMENT
 from .decorators import role_required
-from .models import IssueSubmissionModel, ForwardingHistoryModel, User
+from .models import IssueSubmissionModel, ForwardingHistoryModel, User, FAQModel
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
@@ -56,26 +56,33 @@ def StakerHoldersDashboard(request, filter_by=None):
     user = request.user
     
     # DISPLAY MY SUBMITTED ISSUES
-    my_issues = IssueSubmissionModel.objects.filter(user = user).order_by('-date_submitted')
+    my_issues = IssueSubmissionModel.objects.filter(user = user, moved_to_faq=False).order_by('-date_submitted')
     
+    # KEEP TRACK OF ALL SUBMITTED ISSUES
+    total_issue = my_issues.count()
+    
+    # KEEP TRACK OF ALL PENDING / RESOLVED / FORWARDEDSSUES
+    total_pending_issue = my_issues.filter(status = 'pending').count()
+    total_resolved_issue = my_issues.filter(status = 'resolved').count()
+    total_forwarded_issue = my_issues.filter(status = 'forwarded').count()
     
     # FILTER OUT ISSUES BASED ON STATUS
-    if filter_by == 'pending':
-        my_issues = my_issues.filter(status = 'pending')
-    elif filter_by == 'resolved':
-        my_issues = my_issues.filter(status = 'resolved')
-    elif filter_by == 'forwarded':
-        my_issues = my_issues.filter(status = 'forwarded')
-    
-    # Resolved issues moved to FAQ
-    elif filter_by == 'faq':
-        my_issues = IssueSubmissionModel.objects.filter(status="faq").order_by('-date_submitted')
+    if filter_by == "pending":
+        my_issues = my_issues.filter(status="pending")
+    elif filter_by == "resolved":
+        my_issues = my_issues.filter(status="resolved")
+    elif filter_by == "forwarded":
+        my_issues = my_issues.filter(status="forwarded")
     else:
         pass
         
     return render(request, 'chatisha_kca/stake_holders_dashboard.html', {
         'my_issues' : my_issues, 
         'filter_by': filter_by or 'all',
+        'total_issue': total_issue,
+        'total_pending_issue': total_pending_issue,
+        'total_resolved_issue': total_resolved_issue,
+        'total_forwarded_issue': total_forwarded_issue
     })
 
 # STAKE HOLDERS CAN DELETE THE RESOLVED ISSUES, AND THE ISSUE IS STORED IN FAQ
@@ -84,10 +91,19 @@ def DeleteResolvedIssue(request, pk):
     if resolved_issue.status == 'resolved':
         if request.method == 'POST':
             
-            resolved_issue.status = "faq"
+            # STORE DELETE ISSUES IN FAQ
+            FAQModel.objects.create(
+                question=resolved_issue.description,
+                answer=resolved_issue.response or "No response provided"
+            )
+            
+            # Remove from student's view (but still remains in admin report)
+            resolved_issue.moved_to_faq = True
             resolved_issue.save()
+            
+            #resolved_issue.delete()
             messages.success(request, 'Issue moved to FAQ successfully')
-            return redirect('chatisha_kca:stake-holders-dashboard-filter', filter_by='faq')
+            return redirect('chatisha_kca:stake-holders-dashboard')
     return render(request, 'chatisha_kca/delete_resolved_issue.html', {'resolved_issue': resolved_issue})
         
         
@@ -107,6 +123,14 @@ def DeanVcHoDDashboard(request, filter_by=None):
         Q(department=department) | Q(current_owner=user)
     ).order_by('-date_submitted')
     
+    # KEEP TRACK OF ALL SUBMITTED ISSUES
+    total_issue = submitted_issues.count()
+    
+    # KEEP TRACK OF ALL PENDING / RESOLVED / FORWARDEDSSUES
+    total_pending = submitted_issues.filter(status = 'pending').count()
+    total_resolved = submitted_issues.filter(status = 'resolved').count()
+    total_forwarded = submitted_issues.filter(status = 'forwarded').count()
+    
     # FILTER OUT ISSUES BASED ON STATUS
     if filter_by == "pending":
         submitted_issues = submitted_issues.filter(status="pending")
@@ -119,7 +143,11 @@ def DeanVcHoDDashboard(request, filter_by=None):
     
     return render(request, 'chatisha_kca/dean_vc_hod_dashboard.html', {
         'submitted_issues': submitted_issues,
-        'filter_by': filter_by or 'all'
+        'filter_by': filter_by or 'all',
+        'total_issue': total_issue,
+        'total_pending': total_pending,
+        'total_resolved': total_resolved,
+        'total_forwarded': total_forwarded
     })
 
 # SUBMIT ISSUE - STUDENT, PARENT, SPONSORS, NON-TEACHING STAFFS.
@@ -141,7 +169,7 @@ def IssueDetail(request, pk):
     issue_detail = get_object_or_404(IssueSubmissionModel, pk=pk)
     return render(request, 'chatisha_kca/issue_detail.html', {'issue_detail': issue_detail})
 
-# RESPOND TO ISSUE
+# VC, DEANS, AND HoD RESPOND TO ISSUE
 @role_required(['dean_sot', 'dean_sob', 'dean_student', 'dean_school_of_education_art', 'vc', 'head_of_department'])
 def IssueRespond(request, pk):
     issue = get_object_or_404(IssueSubmissionModel, pk=pk)
@@ -197,3 +225,8 @@ def ForwardIssue(request, pk):
         "issue": issue,
         "forwardable_users": forwardable_users
     })
+
+# FAQ VIEW
+def FAQList(request):
+    faqs = FAQModel.objects.all() # FITLER ALL FAQ
+    return render(request, 'chatisha_kca/faq.html', {'faqs': faqs })
