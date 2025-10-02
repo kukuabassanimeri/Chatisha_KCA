@@ -81,8 +81,19 @@ def auto_forward_overdue_issue():
     overdue_issues = IssueSubmissionModel.objects.filter(
         status="pending",
         current_owner__role__startswith="hod_",
-        date_submitted__lte=timezone.now() - timedelta(minutes = 2)
+        date_submitted__lte=timezone.now() - timedelta(minutes = 50)
     )
+
+    def get_overstayed_duration(issue):
+        # THE NUMBER OF DAYS ISSUE OVERSTAYED
+        '''
+        days = (timezone.now() - issue.date_submitted).days
+        return f"{days} day{'s' if days != 1 else ''}" if days > 0 else "less than a day"
+        '''
+        # Now testing with Minutes.
+        delta = timezone.now() - issue.date_submitted
+        minutes = delta.seconds // 60
+        return f"{minutes} minute{'s' if minutes != 1 else ''}" if minutes > 0 else "less than a minute"
 
     for issue in overdue_issues:
         hod = issue.current_owner
@@ -109,19 +120,19 @@ def auto_forward_overdue_issue():
             Notification.objects.create(
                 user=dean,
                 issue=issue,
-                message=f'Issue "{issue.title}" was auto-forwarded to you from {hod.get_role_display()} after no action was taken.'
+                message=f'Issue "{issue.title}" was auto-forwarded to you from {hod.get_role_display()} after no action was taken for {get_overstayed_duration(issue)}.'
             )
             Notification.objects.create(
                 user=issue.user,
                 issue=issue,
-                message=f'Your issue "{issue.title}" was escalated from {hod.get_role_display()} to {dean.get_role_display()} after no response.'
+                message=f'Your issue "{issue.title}" was escalated from {hod.get_role_display()} to {dean.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
             )
         
     # ESCALATE OVERDUE ISSUE FROM DEAN TO VC DASHBOARD
     overdue_dean_issues = IssueSubmissionModel.objects.filter(
         status="forwarded",
         current_owner__role__startswith="dean_",
-        date_submitted__lte=timezone.now() - timedelta(minutes=10)  # maybe longer wait
+        date_submitted__lte=timezone.now() - timedelta(minutes = 50)  # maybe longer wait
     )
 
     for issue in overdue_dean_issues:
@@ -143,10 +154,10 @@ def auto_forward_overdue_issue():
             Notification.objects.create(
                 user=issue.user,
                 issue=issue,
-                message=f'Your issue "{issue.title}" was escalated from {dean.get_role_display()} to {vc.get_role_display()} after no response.'
+                message=f'Your issue "{issue.title}" was escalated from {dean.get_role_display()} to {vc.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
             )
             Notification.objects.create(
                 user=vc,
                 issue=issue,
-                message=f'Issue "{issue.title}" was auto-forwarded from {dean.get_role_display()} to you ({vc.get_role_display()}) after no action was taken.'
+                message=f'Issue "{issue.title}" was auto-forwarded from {dean.get_role_display()} to you after no action was taken for {get_overstayed_duration(issue)}.'
             )

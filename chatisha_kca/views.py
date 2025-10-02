@@ -118,8 +118,7 @@ def DeleteResolvedIssue(request, pk):
             messages.success(request, 'Issue moved to FAQ successfully')
             return redirect('chatisha_kca:stake-holders-dashboard')
     return render(request, 'chatisha_kca/delete_resolved_issue.html', {'resolved_issue': resolved_issue})
-        
-        
+           
 # HoD, DEAN, & VC DASHBOARD
 @role_required([
     
@@ -155,9 +154,6 @@ def DeanVcHoDDashboard(request, filter_by=None):
     # NOTIFY ADMINS FOR INCOMING ISSUE.
     notifications = Notification.objects.filter(user=user).order_by('-created_at')[:5]
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
-    
-    # HANDLE OVERDUE ISSUE
-    
     
     # KEEP TRACK OF ALL SUBMITTED ISSUES
     total_issue = submitted_issues.count()
