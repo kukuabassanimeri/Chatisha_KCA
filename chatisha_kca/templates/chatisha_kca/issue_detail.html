@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complaint Deatil</title>
-</head>
-<body>
-    <h2>Complaint Detail</h2>
+{% extends 'chatisha_kca/index.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Issue Detail</h2>
 
     <p><strong>From:</strong> {{ issue_detail.user.username }}</p>
     <p><strong>Title:</strong> {{ issue_detail.title }}</p>
@@ -23,6 +19,5 @@
         <button type="button">Forward</button>
     </a>
      <p><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard' %}">Back to Dashboard</a></p>
-    
-</body>
-</html>
+{% endblock content %}
+

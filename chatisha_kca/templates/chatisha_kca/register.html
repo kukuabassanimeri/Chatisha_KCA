@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
+{% extends 'chatisha_kca/index.html' %}
+{% load static %}
+
+{% block content %}
     <h2>User Registration Form</h2>
     <form method="post">
         {% csrf_token %}
@@ -15,5 +11,4 @@
     </form>
     <p>Already have an account?</p>
     <a href="{% url 'chatisha_kca:login' %}">Login</a>
-</body>
-</html>
+{% endblock content %}

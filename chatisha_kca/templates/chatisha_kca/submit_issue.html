@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit an Issue</title>
-</head>
-<body>
+{% extends 'chatisha_kca/index.html' %}
+{% load static %}
+
+{% block content %}
     <h4>Submit Issue</h4>
     <form method="post">
         {% csrf_token %}
         {{ issue_form.as_p }}
         <button type="submit">Submit</button>
     </form>
-</body>
-</html>
+    <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="btn btn-primary">Cancel</a>
+{% endblock content %}

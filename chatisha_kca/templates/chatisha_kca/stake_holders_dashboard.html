@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'chatisha_kca/index.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-</head>
-
-<body>
+{% block content %}
     <p>Hello {{ user.username }} you are logged in as {{ user.get_role_display }}</p>
     <!-- get_FIELNAME_display to show the human-readable value. -->
 
@@ -28,8 +22,8 @@
     </div>
 
     <!-- Notification Bell -->
-    <div class="notification-bell">
-        🔔 {% if unread_count > 0 %}<span class="badge">{{ unread_count }}</span>{% endif %}
+    <div>
+        🔔 {% if unread_count > 0 %}<span>{{ unread_count }}</span>{% endif %}
     </div>
     <div class="notification-dropdown">
         <ul>
@@ -110,6 +104,5 @@
         </tr>
         {% endfor %}
     </table>
-</body>
 
-</html>
+{% endblock content %}
