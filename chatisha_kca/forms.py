@@ -56,3 +56,16 @@ class IssueSubmissionForm(forms.ModelForm):
             'description',
             'priority',
         ]
+        
+    # WHEN SUBMITTING ISSUE, START FROM HoD
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Filter department choices to only HODs
+        hod_departments = ['bsd', 'bac', 'bbit', 'bit']
+        hod_choices = [choice for choice in IssueSubmissionModel._meta.get_field('department').choices if choice[0] in hod_departments]
+
+        self.fields['department'] = forms.ChoiceField(
+            choices=[('', 'Select Department')] + hod_choices,
+            label="Submit to Head of Department"
+        )

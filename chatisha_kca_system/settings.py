@@ -62,10 +62,25 @@ WSGI_APPLICATION = 'chatisha_kca_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+'''
+
+# CONNECT TO MYSQL DATABASE
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'chatisha_kca_db',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 
@@ -136,6 +151,6 @@ PASSWORD_RESET_TIMEOUT = 1800
 DEFAULT_FROM_EMAIL = 'chatisha_kca <{EMAIL_HOST_USER}>'
 
 # LOGOUT SESSION
-SESSION_COOKIE_AGE = 300
+SESSION_COOKIE_AGE = 1800
 SESSION_SAVE_EVERY_REQUEST = True # RESET COUNTDOWN EVERY TIME USER MAKES REQUEST
 SESSION_EXPIRY_AT_BROWSER_CLOSED = True

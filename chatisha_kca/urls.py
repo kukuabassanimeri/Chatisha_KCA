@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = 'chatisha_kca' # appname
+app_name = 'chatisha_kca' # appname 
 
 urlpatterns = [
     
@@ -11,14 +11,14 @@ urlpatterns = [
     path('logout/', views.UserLogout, name='logout'),
     
     # DASHBOARD URLS
-    path('stakerholdersdashboard/', views.StakerHoldersDashboard, name='stake-holders-dashboard'),
-    path('stakerholdersdashboard/<str:filter_by>/', views.StakerHoldersDashboard, name='stake-holders-dashboard-filter'),
+    path('stakeholdersdashboard/', views.StakeHoldersDashboard, name='stake-holders-dashboard'),
+    path('stakeholdersdashboard/<str:filter_by>/', views.StakeHoldersDashboard, name='stake-holders-dashboard-filter'),
     
     path('deanvchoddashboard/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard'),
     path('deanvchoddashboard/<str:filter_by>/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard-filter'),
     
     # ISSUE SUBMISSION URLS
-    path('submitissue/', views.SubmitIsuess, name='submit-issue'),
+    path('submitissue/', views.SubmitIssue, name='submit-issue'),
     path('issuedetail/<int:pk>/', views.IssueDetail, name='issue-detail'),
     
     # ACTION ON ISSUE
@@ -27,9 +27,9 @@ urlpatterns = [
     path('deleteresolvedissue/delete/<int:pk>/', views.DeleteResolvedIssue, name='delete-resolved-issue'),
     
     # FAQ
-    path('faq/', views.FAQList, name='faq'),
-
+    path('faq/', views.FAQList, name='faq'),   
     
-    
+    # NOTIFICATION
+    path('notification/<int:pk>/', views.view_notification, name = 'view-notification')
     
 ]

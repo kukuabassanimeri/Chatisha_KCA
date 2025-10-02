@@ -24,13 +24,35 @@
                 <li><a href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
             </ul>
         </nav>
+
     </div>
+
+    <!-- Notification Bell -->
+    <div class="notification-bell">
+        🔔 {% if unread_count > 0 %}<span class="badge">{{ unread_count }}</span>{% endif %}
+    </div>
+    <div class="notification-dropdown">
+        <ul>
+            {% for notif in notifications %}
+            <li>
+                <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
+                    class="{% if not notif.is_read %} unread {% endif %}">
+                    {{ notif.message }}
+                </a>
+                <small>{{ notif.created_at|timesince }} ago</small>
+            </li>
+            {% empty %}
+            <li>No notifications yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
 
     <div>
         <h2>DASHBOARD</h2>
         <p>All Concerns: <small>{{ total_issue }}</small></p>
         <p>Pending: <small>{{ total_pending_issue }}</small></p>
-       <p>Resolved: <small>{{ total_resolved_issue }}</small></p>
+        <p>Resolved: <small>{{ total_resolved_issue }}</small></p>
         <p>Forwarded: <small>{{ total_forwarded_issue }}</small></p>
     </div>
 
@@ -54,10 +76,10 @@
             <td>{{ issue.priority }}</td>
             <td>{{ issue.status }}</td>
             <td>{{ issue.date_submitted }}</td>
-            
-            <td>
+
+            <td id="issue-{{ issue.id }}">
                 {% if issue.response %}
-                    {{ issue.response }} <br>
+                {{ issue.response }} <br>
                 <small>
                     By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
                 </small>
@@ -66,13 +88,16 @@
                     Waiting for response <br>
                 </small>
                 {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-                    
+
                 {% for f in issue.forwarding_history.all %}
+
+                <small>
                     Forwarded by {{ f.forwarded_by.get_role_display }}
-                → {{ f.forwarded_to.get_role_display }}
+                    → {{ f.forwarded_to.get_role_display }}
+                </small>
 
                 {% if f.note %} <br>Reason: {{ f.note }}{% endif %}<br>
-                    On: {{ f.date_forwarded }}
+                On: {{ f.date_forwarded }}
                 {% endfor %}
                 {% endif %}
             </td>

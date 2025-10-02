@@ -24,6 +24,27 @@
         </nav>
     </div>
 
+    <!-- Notification Bell -->
+    <div class="notification-bell">
+        🔔 {% if unread_count > 0 %}<span class="badge">{{ unread_count }}</span>{% endif %}
+    </div>
+    <div class="notification-dropdown">
+        <ul>
+            {% for notif in notifications %}
+            <li>
+                <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
+                    class="{% if not notif.is_read %} unread {% endif %}">
+                    {{ notif.message }}
+                </a>
+                <small>{{ notif.created_at|timesince }} ago</small>
+            </li>
+            {% empty %}
+            <li>No notifications yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
     <div>
         <h2>DASHBOARD</h2>
         <p>All Concerns: <small>{{ total_issue }}</small></p>
@@ -54,7 +75,8 @@
             <td>{{ issue.title }}</td>
             <td>{{ issue.description }}</td>
             <td>{{ issue.get_priority_display }}</td>
-            <td>{{ issue.status }}</td>
+            <td>{{ issue.get_status_display }}</td>
+
             <td>{{ issue.date_submitted }}</td>
             <td>
                 <a href="{% url 'chatisha_kca:issue-detail' issue.pk %}">
@@ -73,11 +95,12 @@
                     Waiting for response <br>
                 </small>
                 {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-                <strong>Forwarding History</strong> <br>
 
                 {% for f in issue.forwarding_history.all %}
-                Forwarded by {{ f.forwarded_by.get_role_display }}
-                → {{ f.forwarded_to.get_role_display }}
+                <small>
+                    Forwarded by {{ f.forwarded_by.get_role_display }}
+                    → {{ f.forwarded_to.get_role_display }}
+                </small>
 
                 {% if f.note %} <br>Reason: {{ f.note }}{% endif %}<br>
                 On: {{ f.date_forwarded }}
