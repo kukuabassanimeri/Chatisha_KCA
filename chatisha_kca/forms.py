@@ -7,7 +7,7 @@ from django.core import validators
 class CustomUserCreationform(UserCreationForm):
     
     # MAKE THE DEFAULT OPTIONAL FIELDS REQUIRED
-    first_name = forms.CharField(required=True, max_length=20)
+    first_name = forms.CharField(required =True, max_length = 20)
     last_name = forms.CharField(required=True, max_length=20)
     email = forms.EmailField(required=True, max_length=100)
     
@@ -29,6 +29,40 @@ class CustomUserCreationform(UserCreationForm):
             'password1',
             'password2'
         ]
+    
+    # BOOTSTRAP CONTROL FORMS
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget = forms.TextInput(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'First Name'
+        })
+        
+        self.fields['last_name'].widget = forms.TextInput(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'Last Name'
+        })
+        
+        self.fields['username'].widget = forms.TextInput(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'Username'
+        })
+        
+        self.fields['email'].widget = forms.EmailInput(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'Email Address'
+        })
+        
+        
+        self.fields['password1'].widget = forms.PasswordInput(attrs = {
+            'class': 'form-control',
+            'placeholder': 'Password',
+        })
+        
+        self.fields['password2'].widget = forms.PasswordInput(attrs = {
+            'class': 'form-control',
+            'placeholder': 'Confirm Password',
+        })
     
     # VALIDATE IF EMAIL EXIST
     def clean_email(self):

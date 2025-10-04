@@ -68,19 +68,19 @@ STATUS_CHOICES = [
 
 # ISSUE SUBMISSION MODEL
 class IssueSubmissionModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # USER WHO SUBMITTED THE ISSUE
-    department = models.CharField(max_length=255, choices=DEPARTMENT_CHOICES)
-    title = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete = models.CASCADE)  # USER WHO SUBMITTED THE ISSUE
+    department = models.CharField(max_length = 255, choices = DEPARTMENT_CHOICES)
+    title = models.CharField(max_length = 255)
     description = models.TextField()
-    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES)
-    date_submitted = models.DateTimeField(default=timezone.now)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    priority = models.CharField(max_length=10, choices = PRIORITY_CHOICES)
+    date_submitted = models.DateTimeField(default = timezone.now)
+    status = models.CharField(max_length = 20, choices = STATUS_CHOICES, default = 'pending')
     
     # ISSUE RESPONSE
-    response = models.TextField(blank=True, null=True)
-    response_date = models.DateTimeField(blank=True, null=True)
+    response = models.TextField(blank = True, null = True)
+    response_date = models.DateTimeField(blank = True, null = True)
     responded_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='responses'
+        User, on_delete = models.SET_NULL, null = True, blank = True, related_name = 'responses'
     
     )
     
