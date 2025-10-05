@@ -32,3 +32,7 @@
 .register-link, .forgot-password:hover {
     color: #b89e1a;
 }
+
+#toggleIcon{
+    color: #6c757d;
+}

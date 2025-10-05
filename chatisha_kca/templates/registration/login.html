@@ -16,16 +16,38 @@
             <p class="text-muted small mb-0">Sign in to continue</p>
         </div>
 
+       <!-- SHOW SUCCESS AND ERROR MESSAGES -->
+        {% if messages %}
+            <div class="mt-2">
+                {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <form method="post" class="mt-2">
             {% csrf_token %}
-            <div class="mt-4">
+
+            <div class="mb-3 position-relative">
                 {{ log_form.username }}
             </div>
 
-            <div class="mt-4">
+            <div class="mb-3 position-relative">
                 {{ log_form.password }}
+                <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" 
+                id="toggleIcon" role="button"></i>
             </div>
-            <button type="submit" class="btn btn-primary w-100 mt-4 login-btn border-0">Login</button>
+            <button type="submit" class="btn btn-primary w-100 mt-2 login-btn border-0">Login</button>
         </form>
 
         <div class="text-center mt-2">
@@ -35,4 +57,6 @@
         </div>
     </div>
 </div>
+    <script src="{% static 'javascript_files/login.js'%}"></script>
 {% endblock content %}
+

@@ -49,7 +49,7 @@ def UserLogin(request):
 # LOGOUT THE USER
 def UserLogout(request):
     logout(request)
-    messages.success(request, 'You have logged out. Login again with username and password')
+    messages.success(request, 'You have logged out.')
     return redirect('chatisha_kca:login')
 
 # STAKE HOLDERS DASHBOARD

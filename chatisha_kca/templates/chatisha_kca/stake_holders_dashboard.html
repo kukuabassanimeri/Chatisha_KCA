@@ -2,8 +2,17 @@
 {% load static %}
 
 {% block content %}
+
     <p>Hello {{ user.username }} you are logged in as {{ user.get_role_display }}</p>
     <!-- get_FIELNAME_display to show the human-readable value. -->
+
+
+    <!--SHOW SUCCESS & ERROR MESSAGE-->
+    {% for message in messages %}
+        {% if message %}
+            {{ message }}
+        {% endif %}
+    {% endfor %}    
 
     <div>
         <nav>
