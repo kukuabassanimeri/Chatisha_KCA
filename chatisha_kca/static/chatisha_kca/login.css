@@ -1,0 +1,34 @@
+/* Background */
+.login-bg {
+    background: url("../media/kca-bg.jpeg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Card styling */
+.login-card {
+    max-width: 450px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Title */
+.login-title {
+    color: #182b5c;
+}
+
+/* Button */
+.login-btn {
+    background-color: #182b5c !important;
+}
+
+.login-btn:hover {
+    background-color: #d0b126 !important;
+}
+
+/* Links */
+.register-link, .forgot-password {
+    color: #d0b126;
+}
+
+.register-link, .forgot-password:hover {
+    color: #b89e1a;
+}

@@ -1,0 +1,47 @@
+/* Background image */
+.register-bg {
+    background: url("../media/kca-bg.jpeg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Main card styling */
+.register-card {
+    max-width: 450px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Titles and subtitles */
+.register-title {
+    color: #182b5c;
+}
+
+.register-subtitle{
+    color: #6c757d;
+}
+
+/* Register button */
+.register-btn {
+    background-color: #182b5c;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #d0b126;
+}
+
+/* Login link */
+.login-link {
+    color: #d0b126;
+}
+
+.login-link:hover {
+    color: #c1a41f;
+}
+
+.form-select {
+  color: #6c757d;
+}
+
+.form-select option {
+  color: #6c757d;
+}

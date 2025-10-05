@@ -1,18 +1,38 @@
 {% extends 'chatisha_kca/index.html' %}
 {% load static %}
 
+<!--CSS-->
+{% block css %}
+<link rel="stylesheet" href="{% static 'chatisha_kca/login.css' %}">
+{% endblock css %}
+
 {% block content %}
-       <div class="container">
-        <h2>Login Form</h2>
-        <form method="post">
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100 login-bg" role="button">
+
+    <div class="card shadow-lg border-0 p-4 login-card rounded-2 w-100">
+        <div class="text-center mb-4">
+            <img src="{% static 'media/kca-logo.png' %}" alt="KCA Logo" class="mb-3 rounded-circle w-25" role="button">
+            <h3 class="fw-bold text-uppercase login-title">Chatisha KCAU</h3>
+            <p class="text-muted small mb-0">Sign in to continue</p>
+        </div>
+
+        <form method="post" class="mt-2">
             {% csrf_token %}
-            {{ log_form.as_p }}
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+            <div class="mt-4">
+                {{ log_form.username }}
+            </div>
+
+            <div class="mt-4">
+                {{ log_form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-4 login-btn border-0">Login</button>
         </form>
-        <p>Forgot Password?</p>
-        <a href="{% url 'password_reset' %}">Reset</a>
-        <p>Don't have an account?</p>
-        <a href="{% url 'chatisha_kca:register' %}">Register</a>
+
+        <div class="text-center mt-2">
+            <a href="{% url 'password_reset' %}" class="text-decoration-none forgot-password d-block mb-2">Forgot Password?</a>
+            <p class="small mb-1 text-muted">Don't have an account?</p>
+            <a href="{% url 'chatisha_kca:register' %}" class="text-decoration-none register-link fw-semibold">Register</a>
+        </div>
     </div>
+</div>
 {% endblock content %}
- 

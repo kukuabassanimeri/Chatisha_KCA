@@ -5,21 +5,18 @@ from .models import CustomUser, IssueSubmissionModel
 from django.core import validators
 
 class CustomUserCreationform(UserCreationForm):
-    
-    # MAKE THE DEFAULT OPTIONAL FIELDS REQUIRED
-    first_name = forms.CharField(required =True, max_length = 20)
+    first_name = forms.CharField(required=True, max_length=20)
     last_name = forms.CharField(required=True, max_length=20)
     email = forms.EmailField(required=True, max_length=100)
-    
-    # SELECT ROLE TO PROCEED
+
+    # Select Role to Proceed
     role = forms.ChoiceField(
-        choices=[('', '---Please Select Role---')] + CustomUser.ROLE_CHOICE,
+        choices=[('', 'Please Select Role')] + CustomUser.ROLE_CHOICE,
         required=True
     )
-    
+
     class Meta:
         model = CustomUser
-        
         fields = [
             'first_name',
             'last_name',
@@ -29,56 +26,49 @@ class CustomUserCreationform(UserCreationForm):
             'password1',
             'password2'
         ]
-    
-    # BOOTSTRAP CONTROL FORMS
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['first_name'].widget = forms.TextInput(attrs = {
-            'class' : 'form-control',
-            'placeholder' : 'First Name'
+
+        # Common field styling
+        common_style = {'class': 'form-control'}
+
+        self.fields['first_name'].widget = forms.TextInput(attrs={**common_style, 'placeholder': 'First Name'})
+        self.fields['last_name'].widget = forms.TextInput(attrs={**common_style, 'placeholder': 'Last Name'})
+        self.fields['username'].widget = forms.TextInput(attrs={**common_style, 'placeholder': 'Username'})
+        self.fields['email'].widget = forms.EmailInput(attrs={**common_style, 'placeholder': 'Email Address'})
+        self.fields['password1'].widget = forms.PasswordInput(attrs={**common_style, 'placeholder': 'Password'})
+        self.fields['password2'].widget = forms.PasswordInput(attrs={**common_style, 'placeholder': 'Confirm Password'})
+
+        # Style the role select field
+        self.fields['role'].widget.attrs.update({
+            'class': 'form-select',
         })
         
-        self.fields['last_name'].widget = forms.TextInput(attrs = {
-            'class' : 'form-control',
-            'placeholder' : 'Last Name'
-        })
-        
-        self.fields['username'].widget = forms.TextInput(attrs = {
-            'class' : 'form-control',
-            'placeholder' : 'Username'
-        })
-        
-        self.fields['email'].widget = forms.EmailInput(attrs = {
-            'class' : 'form-control',
-            'placeholder' : 'Email Address'
-        })
-        
-        
-        self.fields['password1'].widget = forms.PasswordInput(attrs = {
-            'class': 'form-control',
-            'placeholder': 'Password',
-        })
-        
-        self.fields['password2'].widget = forms.PasswordInput(attrs = {
-            'class': 'form-control',
-            'placeholder': 'Confirm Password',
-        })
-    
-    # VALIDATE IF EMAIL EXIST
+        # Remove help texts and label suffix
+        for fieldName in ['username', 'password1', 'password2']:
+            self.fields[fieldName].help_text = None
+        self.label_suffix = ''
+
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
         if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError('This email already exist')
+            raise forms.ValidationError('This email already exists')
         return email
 
 # USER LOGIN
 class UserLoginForm(forms.Form):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your username'})
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
     )
+    
+    def __init__(self, *args, **kwargs): # DEFINE CONSTRUCTOR
+        super().__init__(*args, **kwargs) # *args and **kwargs - Accept any number of positional & keyword arguments.
+        # Calls the parent class constructor.
+        self.label_suffix = '' # Changes that default colon by setting the label suffix to an empty string ('').
 
 # ISSUE SUBMISSION FORM
 class IssueSubmissionForm(forms.ModelForm):
