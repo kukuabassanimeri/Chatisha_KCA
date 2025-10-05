@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import CustomUser, IssueSubmissionModel
 from django.core import validators
+import re
 
 class CustomUserCreationform(UserCreationForm):
     first_name = forms.CharField(required=True, max_length=20)
@@ -45,17 +46,61 @@ class CustomUserCreationform(UserCreationForm):
             'class': 'form-select',
         })
         
-        # Remove help texts and label suffix
-        for fieldName in ['username', 'password1', 'password2']:
-            self.fields[fieldName].help_text = None
+        # Remove label suffix
         self.label_suffix = ''
 
+    # CHECK IF USERNAME & EMAIL EXIST
+    
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        if CustomUser.objects.filter(username = username).exists():
+            raise forms.ValidationError('This username already exit')
+        return username
+        
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        if CustomUser.objects.filter(email=email).exists():
+        if CustomUser.objects.filter(email = email).exists():
             raise forms.ValidationError('This email already exists')
         return email
 
+    # VALIDATE PASSWORD STRENGTH
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+
+        # Must be at least 8 characters
+        if len(password) < 8:
+            raise forms.ValidationError('Password must be at least 8 characters long.')
+
+        # Must contain uppercase
+        if not re.search(r'[A-Z]', password):
+            raise forms.ValidationError('Password must contain at least one uppercase letter.')
+
+        # Must contain lowercase
+        if not re.search(r'[a-z]', password):
+            raise forms.ValidationError('Password must contain at least one lowercase letter.')
+
+        # Must contain digits
+        if not re.search(r'\d', password):
+            raise forms.ValidationError('Password must contain at least one number.')
+
+        # Must contain special character
+        if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
+            raise forms.ValidationError('Password must contain at least one special character.')
+        
+        return password
+    
+    # CHECK IF PASSWORD1 AND PASSWORD2 DON'T MATCH
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match")
+
+        return cleaned_data
+    
+    
 # USER LOGIN
 class UserLoginForm(forms.Form):
     username = forms.CharField(

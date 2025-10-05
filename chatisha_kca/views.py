@@ -19,7 +19,7 @@ def UserRegistration(request):
         if r_form.is_valid():
             user = r_form.save()
             login(request, user)
-            messages.success(request, 'You have successfully created an account. Login with username and password')
+            messages.success(request, 'Account created successfully. Login with username and password')
             return redirect('chatisha_kca:login')
     else:
         r_form = CustomUserCreationform()

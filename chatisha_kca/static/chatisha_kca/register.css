@@ -45,3 +45,9 @@
 .form-select option {
   color: #6c757d;
 }
+
+.helptext, .helptext li {
+    display: none;
+    font-size: 0.85rem;
+    color: #6c757d; /* Bootstrap's gray */
+}
