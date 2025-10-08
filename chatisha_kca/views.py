@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .utils import RedirectBasedOnRole, ROLE_TO_DEPARTMENT, get_forwardable_user, auto_forward_overdue_issue
 from .decorators import role_required
-from .models import IssueSubmissionModel, ForwardingHistoryModel, User, FAQModel, CustomUser, Notification
+from .models import (IssueSubmissionModel, ForwardingHistoryModel, User, FAQModel, CustomUser, Notification, UserProfile)
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
@@ -68,6 +68,7 @@ def StakeHoldersDashboard(request, filter_by=None):
     # NOTIFICATIONS
     notifications = Notification.objects.filter(user=user).order_by('-created_at')[:5] # The Last 5
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
+    
     
     # KEEP TRACK OF ALL SUBMITTED ISSUES
     total_issue = my_issues.count()
@@ -211,7 +212,7 @@ def SubmitIssue(request):
                 Notification.objects.create(
                     user=hod_user,
                     issue=issue,
-                    message=f'New issue "{issue.title}" has been raised by {request.user.get_role_display()}.'
+                    message=f'New issue {issue.title} has been raised by {request.user.get_role_display()}.'
                 )
                 
                 messages.success(request, 'Issue submitted successfully to HOD.')
@@ -264,7 +265,7 @@ def IssueRespond(request, pk):
         Notification.objects.create(
             user=issue.user,
             issue=issue,
-            message=f'Your issue "{issue.title}" has been {status_update} by {request.user.get_role_display()}'
+            message=f'{issue.title} has been {status_update} by {request.user.get_role_display()}'
         )
         
         # Notify whole forwarding chain if RESOLVED
@@ -277,7 +278,7 @@ def IssueRespond(request, pk):
                     Notification.objects.create(
                         user=f.forwarded_by,
                         issue=issue,
-                        message=f'The issue "{issue.title}" you forwarded has been resolved by {request.user.get_role_display()}.'
+                        message=f'{issue.title} you forwarded has been resolved by {request.user.get_role_display()}.'
                     )
                     notified_users.add(f.forwarded_by)
 
@@ -315,14 +316,14 @@ def ForwardIssue(request, pk):
             Notification.objects.create(
                 user=issue.user,
                 issue=issue,
-                message=f'Your issue "{issue.title}" has been {status_update} to {forward_to_user.get_role_display()}.'
+                message=f' {issue.title} has been {status_update} to {forward_to_user.get_role_display()}.'
             )
             
              # Notify new owner (Dean, VC, etc.)
             Notification.objects.create(
                 user=forward_to_user,
                 issue=issue,
-                message=f'New issue "{issue.title}" has been forwarded to you by {request.user.get_role_display()}.'
+                message=f'{issue.title} has been forwarded to you by {request.user.get_role_display()}.'
             )
 
         return redirect('chatisha_kca:dean-vc-hod-dashboard')

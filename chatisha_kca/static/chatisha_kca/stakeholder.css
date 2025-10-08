@@ -1,0 +1,41 @@
+.top-nav-bg {
+    background-color: #182b5c;
+}
+
+.bg-logout {
+    background-color: #d0b126;
+}
+
+.side-nav-bg {
+    background-color: #d0b126;
+}
+
+.fw-semibold {
+    color: #182b5c;
+}
+
+.concern-table {
+  border: 1px solid #d0b126;
+  border-collapse: collapse;
+}
+
+.concern-table th,
+.concern-table td {
+  border: 1px solid #d0b126;
+}
+
+.concern-summary {
+    color: #182b5c;
+}
+
+.concern-table th {
+    color: #fff;
+}
+
+.concern-table th {
+    background-color: #182b5c;
+}
+
+.footer-bg {
+  background-color: #002855; 
+}

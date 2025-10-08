@@ -3,6 +3,14 @@
 
 {% block content %}
     <p>Hello {{ user.username }} you are logged in as {{ user.get_role_display }}
+
+    <!--SHOW SUCCESS & ERROR MESSAGE-->
+    {% for message in messages %}
+        {% if message %}
+            {{ message }}
+        {% endif %}
+    {% endfor %}
+    
     <div>
         <nav>
             <ul>

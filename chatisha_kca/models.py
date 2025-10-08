@@ -126,3 +126,14 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"Notification for {self.user.username} - {self.message[:30]}"
+
+# USER PROFILE
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(
+        upload_to = 'avatars/',
+        default = 'default.png',
+        blank = True
+    )
+    def __str__(self):
+        return self.user.username

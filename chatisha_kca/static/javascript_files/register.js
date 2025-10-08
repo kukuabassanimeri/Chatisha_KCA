@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 danger.style.opacity = "0";
                 setTimeout(() => danger.remove(), 500); //* remove after fade
 
-            }, 5000); //* fade after 2 seconds
+            }, 6000); //* fade after 2 seconds
         });
     }, 100);
 });

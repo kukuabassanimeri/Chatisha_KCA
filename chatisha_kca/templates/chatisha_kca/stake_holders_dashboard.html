@@ -1,117 +1,204 @@
 {% extends 'chatisha_kca/index.html' %}
 {% load static %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'chatisha_kca/stakeholder.css' %}">
+{% endblock css %}
+
 {% block content %}
+<div class="container-fluid d-flex flex-column min-vh-100 p-0">
 
-    <p>Hello {{ user.username }} you are logged in as {{ user.get_role_display }}</p>
-    <!-- get_FIELNAME_display to show the human-readable value. -->
+  <div class="row g-0 flex-grow-1">
 
+    <!-- SIDE BAR NAV-->
+    <div class="col-md-2 side-nav-bg position-fixed top-0 start-0 vh-100 d-flex flex-column align-items-center pt-3">
+      <div class="text-center mb-4">
+        <img src="{% static 'media/kca-logo.png' %}" alt="KCA Logo"
+             width="60" height="60" class="rounded-circle mb-2" role="button">
+        <h5 class="fw-bold text-uppercase text-light">Chatisha KCA</h5>
+      </div>
 
-    <!--SHOW SUCCESS & ERROR MESSAGE-->
-    {% for message in messages %}
-        {% if message %}
-            {{ message }}
-        {% endif %}
-    {% endfor %}    
+      <ul class="nav flex-column w-100 px-3">
+        <li class="nav-item mb-2">
+          <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="nav-link text-light fw-semibold text-uppercase">Dashboard</a>
+        </li>
 
-    <div>
-        <nav>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard' %}">All Concerns</a></li>
-                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'pending' %}">Pending</a></li>
-                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}">Resolved</a></li>
-                <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}">Forwarded</a></li>
-                <li><a href="{% url 'chatisha_kca:submit-issue' %}">Submit New Concern</a></li>
-                <li><a href="{% url 'chatisha_kca:faq' %}">FAQ</a></li>
-                <li><a href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
-            </ul>
-        </nav>
-
+        <!-- My Concern Dropdown -->
+        <li class="nav-item mb-2">
+          <a class="nav-link text-light fw-semibold d-flex justify-content-between align-items-center text-uppercase"
+             data-bs-toggle="collapse" href="#allConcernsSubmenu" role="button"
+             aria-expanded="false" aria-controls="allConcernsSubmenu">
+            My Concern
+            <span class="ms-2">+</span>
+          </a>
+          <ul class="collapse ps-3 mt-1 list-unstyled" id="allConcernsSubmenu">
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="nav-link text-light">All Concern</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'pending' %}" class="nav-link text-light">Pending</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}" class="nav-link text-light">Resolved</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}" class="nav-link text-light">Forwarded</a></li>
+            <li><a href="{% url 'chatisha_kca:submit-issue' %}" class="nav-link text-light">Submit Concern</a></li>
+            <li><a href="{% url 'chatisha_kca:faq' %}" class="nav-link text-light">FAQ</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
 
-    <!-- Notification Bell -->
-    <div>
-        🔔 {% if unread_count > 0 %}<span>{{ unread_count }}</span>{% endif %}
-    </div>
-    <div class="notification-dropdown">
-        <ul>
-            {% for notif in notifications %}
-            <li>
-                <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
-                    class="{% if not notif.is_read %} unread {% endif %}">
-                    {{ notif.message }}
-                </a>
-                <small>{{ notif.created_at|timesince }} ago</small>
-            </li>
-            {% empty %}
-            <li>No notifications yet.</li>
-            {% endfor %}
-        </ul>
-    </div>
+    <!-- Main Content (Topnav + Body + Footer) -->
+    <div class="col-md-10 offset-md-2 d-flex flex-column min-vh-100">
 
+      <!-- Top Navbar -->
+      <nav class="navbar navbar-expand-lg px-3 top-nav-bg border-bottom border-warning sticky-top">
+        <div class="container-fluid">
+          <div class="ms-auto d-flex align-items-center">
 
-    <div>
-        <h2>DASHBOARD</h2>
-        <p>All Concerns: <small>{{ total_issue }}</small></p>
-        <p>Pending: <small>{{ total_pending_issue }}</small></p>
-        <p>Resolved: <small>{{ total_resolved_issue }}</small></p>
-        <p>Forwarded: <small>{{ total_forwarded_issue }}</small></p>
-    </div>
-
-    <h3>My Submitted Issues</h3>
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>Department</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Date Submitted</th>
-            <th>Response</th>
-            <th>Action</th>
-        </tr>
-        {% for issue in my_issues %}
-        <tr>
-            <td>{{ issue.get_department_display }}</td>
-            <td>{{ issue.title }}</td>
-            <td>{{ issue.description }}</td>
-            <td>{{ issue.priority }}</td>
-            <td>{{ issue.status }}</td>
-            <td>{{ issue.date_submitted }}</td>
-
-            <td id="issue-{{ issue.id }}">
-                {% if issue.response %}
-                {{ issue.response }} <br>
-                <small>
-                    By {{ issue.responded_by.get_role_display }} On {{ issue.response_date }}
-                </small>
-                {% elif issue.status == "pending" %}
-                <small>
-                    Waiting for response <br>
-                </small>
-                {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-
-                {% for f in issue.forwarding_history.all %}
-
-                <small>
-                    Forwarded by {{ f.forwarded_by.get_role_display }}
-                    → {{ f.forwarded_to.get_role_display }}
-                </small>
-
-                {% if f.note %} <br>Reason: {{ f.note }}{% endif %}<br>
-                On: {{ f.date_forwarded }}
-                {% endfor %}
+            <!-- Notification Bell -->
+            <div class="dropdown me-4">
+              <a class="text-white small position-relative" href="#" id="notifDropdown"
+                 data-bs-toggle="dropdown" aria-expanded="false">
+                🔔
+                {% if unread_count > 0 %}
+                <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 rounded-circle">
+                  {{ unread_count }}
+                </span>
                 {% endif %}
-            </td>
-            <td><a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}"><button>delete</button></a></td>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 300px;">
+                {% for notif in notifications %}
+                <li class="p-2 border-bottom {% if not notif.is_read %}bg-light{% endif %}">
+                  <a href="{% url 'chatisha_kca:view-notification' notif.id %}" class="text-decoration-none text-dark d-block">
+                    <small>{{ notif.message }}</small><br>
+                    <span class="text-muted small fst-italic">{{ notif.created_at|timesince }} ago</span>
+                  </a>
+                </li>
+                {% empty %}
+                <li class="text-center text-muted p-2">No notifications yet.</li>
+                {% endfor %}
+              </ul>
+            </div>
 
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No issues submitted yet.</td>
-        </tr>
+            <!-- User Info -->
+            <div class="dropdown">
+              <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#"
+                 id="userDropdown" data-bs-toggle="dropdown">
+                <span>{{ user.username }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow bg-logout text-center">
+                <li><a class="text-light text-decoration-none" href="{% url 'chatisha_kca:logout' %}">Logout</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Dashboard Content -->
+      <main class="flex-grow-1 px-4 py-4">
+        {% for message in messages %}
+        <div class="alert alert-info">{{ message }}</div>
         {% endfor %}
-    </table>
 
+        <!-- Cards -->
+        <div class="row text-center g-4 mb-4">
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+              <div class="card-body">
+                <h6 class="fw-semibold text-uppercase">All Concern</h6>
+                <h3 class="fw-bold text-primary">{{ total_issue }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+              <div class="card-body">
+                <h6 class="fw-semibold text-uppercase">Pending</h6>
+                <h3 class="fw-bold text-warning">{{ total_pending_issue }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+              <div class="card-body">
+                <h6 class="fw-semibold text-uppercase">Resolved</h6>
+                <h3 class="fw-bold text-success">{{ total_resolved_issue }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border-0 shadow-sm bg-info bg-opacity-10">
+              <div class="card-body">
+                <h6 class="fw-semibold text-uppercase">Forwarded</h6>
+                <h3 class="fw-bold text-info">{{ total_forwarded_issue }}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="fw-bold mb-3 text-uppercase concern-summary">Concern Summary</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered table-sm align-middle shadow-sm text-start concern-table">
+            <thead class="text-white">
+              <tr class="small text-center">
+                <th>Department</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Date Submitted</th>
+                <th>Response</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody class="small border-warning">
+              {% for issue in my_issues %}
+              <tr>
+                <td>{{ issue.get_department_display }}</td>
+                <td >{{ issue.title }}</td>
+                <td>{{ issue.description }}</td>
+                <td>{{ issue.priority }}</td>
+                <td>
+                  <span class="badge 
+                    {% if issue.status == 'pending' %} bg-warning text-secondary
+                    {% elif issue.status == 'resolved' %} bg-success
+                    {% elif issue.status == 'forwarded' %} bg-info text-secondary
+                    {% else %} bg-secondary {% endif %}">
+                    {{ issue.status }}
+                  </span>
+                </td>
+                <td>{{ issue.date_submitted }}</td>
+                <td>
+                  {% if issue.response %}
+                    <small>{{ issue.response }} <br>
+                    <span class="text-muted">By {{ issue.responded_by.get_role_display }} on {{ issue.response_date }}</span></small>
+                  {% elif issue.status == "pending" %}
+                    <small class="text-muted">Waiting for response</small>
+                  {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
+                    {% for f in issue.forwarding_history.all %}
+                      <small>From {{ f.forwarded_by.get_role_display }} to {{ f.forwarded_to.get_role_display }}.<br>{{ f.note }}<br><span class="text-muted">On {{ f.date_forwarded }}</span></small>
+                    {% endfor %}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if issue.status == "resolved" %}
+                  <a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}" class="btn btn-sm btn-outline-danger">
+                    Delete
+                  </a>
+                  {% else %}
+                  <button class="btn btn-sm btn-outline-secondary" disabled>Delete</button>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="8" class="text-center text-muted">No issues submitted yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer-bg text-light text-center py-2 border-top border-warning mt-auto">
+        <small>© Chatisha KCA | Empowering Stakeholders' Voices | <span class="text-warning">KCA University</span></small>
+      </footer>
+    </div>
+  </div>
+</div>
 {% endblock content %}

@@ -7,7 +7,7 @@ setTimeout(() => {
 
         setTimeout(() => alert.remove(), 500)
     });
-}, 3000) //* Fade out after 4 seconds
+}, 6000) //* Fade out after 4 seconds
 
 //* TOGGLE PASSWORD
   const toggleIcon = document.querySelector('#toggleIcon');

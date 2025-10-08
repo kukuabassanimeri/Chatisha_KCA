@@ -48,6 +48,7 @@ class CustomUserCreationform(UserCreationForm):
         
         # Remove label suffix
         self.label_suffix = ''
+        
 
     # CHECK IF USERNAME & EMAIL EXIST
     
