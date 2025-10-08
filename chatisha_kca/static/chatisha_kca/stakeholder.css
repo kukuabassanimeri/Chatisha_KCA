@@ -10,7 +10,7 @@
     background-color: #d0b126;
 }
 
-.fw-semibold {
+.fw-semibold, .fw-bold {
     color: #182b5c;
 }
 
@@ -39,3 +39,40 @@
 .footer-bg {
   background-color: #002855; 
 }
+
+/* ISSUE SUBMISSION */
+.btn-submit {
+    background-color: #182b5c;
+}
+.btn-submit:hover {
+    background-color: #d0b126;
+}
+.submit-container {
+    max-width: 500px;
+}
+
+.cancel-submmission {
+    color: #d0b126;
+}
+
+/* FAQ */
+.faq-container {
+        max-width: 700px;
+    }
+
+    .faq-answer {
+        display: none;
+        padding: 10px 0 0 5px;
+    }
+
+    .faq-item.active .faq-answer {
+        display: block;
+    }
+
+    .faq-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }

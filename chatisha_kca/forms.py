@@ -12,8 +12,8 @@ class CustomUserCreationform(UserCreationForm):
 
     # Select Role to Proceed
     role = forms.ChoiceField(
-        choices=[('', 'Please Select Role')] + CustomUser.ROLE_CHOICE,
-        required=True
+        choices = [('', 'Please Select Role')] + CustomUser.ROLE_CHOICE,
+        required = True
     )
 
     class Meta:
@@ -113,8 +113,8 @@ class UserLoginForm(forms.Form):
     
     def __init__(self, *args, **kwargs): # DEFINE CONSTRUCTOR
         super().__init__(*args, **kwargs) # *args and **kwargs - Accept any number of positional & keyword arguments.
-        # Calls the parent class constructor.
-        self.label_suffix = '' # Changes that default colon by setting the label suffix to an empty string ('').
+        
+        self.label_suffix = ''
 
 # ISSUE SUBMISSION FORM
 class IssueSubmissionForm(forms.ModelForm):
@@ -131,11 +131,36 @@ class IssueSubmissionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+        # STYLE WITH BOOTSTRAP
+        self.fields['title'].widget = forms.TextInput(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'Issue Title'
+        })
+        
+        self.fields['description'].widget = forms.Textarea(attrs = {
+            'class' : 'form-control',
+            'placeholder' : 'Issue Description',
+            'rows' : 4,
+            
+        })
+        
+        self.fields['priority'].choices = [('', 'Select Priority')] + list(self.fields['priority'].choices)
+        self.fields['priority'].widget.attrs.update({
+            'class': 'form-select'
+        })
+        
+        
         # Filter department choices to only HODs
         hod_departments = ['bsd', 'bac', 'bbit', 'bit']
         hod_choices = [choice for choice in IssueSubmissionModel._meta.get_field('department').choices if choice[0] in hod_departments]
 
         self.fields['department'] = forms.ChoiceField(
-            choices=[('', 'Select Department')] + hod_choices,
-            label="Submit to Head of Department"
+            choices = [('', 'Select Department')] + hod_choices
         )
+        
+        self.fields['department'].widget.attrs.update({
+            'class': 'form-select',
+        })
+        
+        # REMOVE THE COLON LABEL
+        self.label_suffix = ''

@@ -1,12 +1,56 @@
 {% extends 'chatisha_kca/index.html' %}
 {% load static %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'chatisha_kca/stakeholder.css' %}">
+{% endblock css %}
+
 {% block content %}
-    <h4>Submit Issue</h4>
-    <form method="post">
-        {% csrf_token %}
-        {{ issue_form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="btn btn-primary">Cancel</a>
+<div class="container mt-5 submit-container">
+    <div class="p-4 border rounded-1 shadow-sm bg-white">
+        <h4 class="fw-bold text-uppercase text-center mb-2">Submit Your Issue</h4>
+
+        <!-- Show success and error messages -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                {% if 'error' in message.tags %}
+                <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% else %}
+                    {{ pass }}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Issue submission form -->
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+            <div class="mb-2">
+                {{ issue_form.department }}
+            </div>
+
+            <div class="mb-2">
+                {{ issue_form.title }}
+            </div>
+
+            <div class="mb-2">
+                {{ issue_form.description }}
+            </div>
+
+            <div class="mb-2">
+                {{ issue_form.priority }}
+            </div>
+
+            <button type="submit" class="btn btn-submit w-100 text-light mt-2">Submit</button>
+        </form>
+
+        <div class="text-center mt-3">
+             <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class=" text-decoration-none small cancel-submmission">Cancel</a>
+        </div>
+    </div>
+</div>
 {% endblock content %}

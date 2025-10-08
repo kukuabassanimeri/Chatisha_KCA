@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 100);
 });
 
+
 //* TOGGLE PASSWORD
 document.querySelectorAll('.toggle-password').forEach(icon => {
   icon.addEventListener('click', () => {

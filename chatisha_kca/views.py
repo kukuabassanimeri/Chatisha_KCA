@@ -69,7 +69,6 @@ def StakeHoldersDashboard(request, filter_by=None):
     notifications = Notification.objects.filter(user=user).order_by('-created_at')[:5] # The Last 5
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
     
-    
     # KEEP TRACK OF ALL SUBMITTED ISSUES
     total_issue = my_issues.count()
     
