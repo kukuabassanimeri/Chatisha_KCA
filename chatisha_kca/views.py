@@ -66,8 +66,9 @@ def StakeHoldersDashboard(request, filter_by=None):
     my_issues = IssueSubmissionModel.objects.filter(user = user, moved_to_faq=False).order_by('-date_submitted')
     
     # NOTIFICATIONS
-    notifications = Notification.objects.filter(user=user).order_by('-created_at')[:5] # The Last 5
+    notifications = Notification.objects.filter(user=user).order_by('-created_at') # The Last 5
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
+    
     
     # KEEP TRACK OF ALL SUBMITTED ISSUES
     total_issue = my_issues.count()
@@ -96,6 +97,7 @@ def StakeHoldersDashboard(request, filter_by=None):
         'total_forwarded_issue': total_forwarded_issue,
         'notifications': notifications,
         'unread_count': unread_count,
+        'issue_form' : IssueSubmissionForm()
     })
 
 # STAKE HOLDERS CAN DELETE THE RESOLVED ISSUES, AND THE ISSUE IS STORED IN FAQ

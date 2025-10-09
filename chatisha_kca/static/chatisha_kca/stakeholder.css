@@ -40,19 +40,13 @@
   background-color: #002855; 
 }
 
-/* ISSUE SUBMISSION */
+/* SUBMIT ISSUE */
 .btn-submit {
-    background-color: #182b5c;
-}
-.btn-submit:hover {
-    background-color: #d0b126;
-}
-.submit-container {
-    max-width: 500px;
+    background-color: #002855;
 }
 
-.cancel-submmission {
-    color: #d0b126;
+.btn-submit:hover {
+    background-color: #d0b126;
 }
 
 /* FAQ */
@@ -75,4 +69,24 @@
 
     .faq-item.active .faq-icon {
         transform: rotate(180deg);
+    }
+
+    .card-summary {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .card-summary:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 0.75rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .card-summary:active {
+        transform: scale(0.98);
+    }
+
+    .noti-card {
+        width: 300px; 
+        max-height: 300px; 
+        overflow-y: auto; 
     }

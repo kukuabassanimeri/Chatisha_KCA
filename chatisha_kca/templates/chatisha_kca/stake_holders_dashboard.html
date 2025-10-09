@@ -13,30 +13,42 @@
     <!-- SIDE BAR NAV-->
     <div class="col-md-2 side-nav-bg position-fixed top-0 start-0 vh-100 d-flex flex-column align-items-center pt-3">
       <div class="text-center mb-4">
-        <img src="{% static 'media/kca-logo.png' %}" alt="Chatisha KCA Logo"
-             width="60" height="60" class="rounded-circle mb-2" role="button">
+        <img src="{% static 'media/kca-logo.png' %}" alt="Chatisha KCA Logo" width="60" height="60"
+          class="rounded-circle mb-2" role="button">
         <h5 class="fw-bold text-uppercase text-light">Chatisha KCA</h5>
       </div>
 
       <ul class="nav flex-column w-100 px-3">
         <li class="nav-item mb-2">
-          <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="nav-link text-light fw-semibold text-uppercase">Dashboard</a>
+          <a href="{% url 'chatisha_kca:stake-holders-dashboard' %}"
+            class="nav-link text-light fw-semibold text-uppercase">Dashboard</a>
         </li>
 
         <!-- My Concern Dropdown -->
         <li class="nav-item mb-2">
           <a class="nav-link text-light fw-semibold d-flex justify-content-between align-items-center text-uppercase"
-             data-bs-toggle="collapse" href="#allConcernsSubmenu" role="button"
-             aria-expanded="false" aria-controls="allConcernsSubmenu">
+            data-bs-toggle="collapse" href="#allConcernsSubmenu" role="button" aria-expanded="false"
+            aria-controls="allConcernsSubmenu" id="concernToggle">
             My Concern
-            <span class="ms-2">+</span>
+            <span class="ms-2 toggle-icon">+</span>
           </a>
           <ul class="collapse ps-3 mt-1 list-unstyled" id="allConcernsSubmenu">
-            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="nav-link text-light">All Concern</a></li>
-            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'pending' %}" class="nav-link text-light">Pending</a></li>
-            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}" class="nav-link text-light">Resolved</a></li>
-            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}" class="nav-link text-light">Forwarded</a></li>
-            <li><a href="{% url 'chatisha_kca:submit-issue' %}" class="nav-link text-light">Submit Concern</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard' %}" class="nav-link text-light">All Concern</a>
+            </li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'pending' %}"
+                class="nav-link text-light">Pending</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'resolved' %}"
+                class="nav-link text-light">Resolved</a></li>
+            <li><a href="{% url 'chatisha_kca:stake-holders-dashboard-filter' 'forwarded' %}"
+                class="nav-link text-light">Forwarded</a></li>
+
+            <li>
+              <a href="{% url 'chatisha_kca:submit-issue' %}" class="nav-link text-light" id="openSubmitModal"
+                data-submit-url="{% url 'chatisha_kca:submit-issue' %}">
+                Submit Concern
+              </a>
+            </li>
+
             <li><a href="{% url 'chatisha_kca:faq' %}" class="nav-link text-light">FAQ</a></li>
           </ul>
         </li>
@@ -53,8 +65,8 @@
 
             <!-- Notification Bell -->
             <div class="dropdown me-4">
-              <a class="text-white small position-relative" href="#" id="notifDropdown"
-                 data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="text-white small position-relative" href="#" id="notifDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">
                 🔔
                 {% if unread_count > 0 %}
                 <span class="badge bg-danger position-absolute top-0 start-100 translate-middle p-1 rounded-circle">
@@ -62,10 +74,12 @@
                 </span>
                 {% endif %}
               </a>
-              <ul class="dropdown-menu dropdown-menu-end shadow" style="width: 300px;">
+
+              <ul class="dropdown-menu dropdown-menu-end shadow border border-warning noti-card">
                 {% for notif in notifications %}
                 <li class="p-2 border-bottom {% if not notif.is_read %}bg-light{% endif %}">
-                  <a href="{% url 'chatisha_kca:view-notification' notif.id %}" class="text-decoration-none text-dark d-block">
+                  <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
+                    class="text-decoration-none text-dark d-block">
                     <small>{{ notif.message }}</small><br>
                     <span class="text-muted small fst-italic">{{ notif.created_at|timesince }} ago</span>
                   </a>
@@ -76,10 +90,11 @@
               </ul>
             </div>
 
+
             <!-- User Info -->
             <div class="dropdown">
               <a class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" href="#"
-                 id="userDropdown" data-bs-toggle="dropdown">
+                id="userDropdown" data-bs-toggle="dropdown">
                 <span>{{ user.username }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-end shadow bg-logout text-center">
@@ -92,23 +107,23 @@
 
       <!-- Dashboard Content -->
       <main class="flex-grow-1 px-4 py-4">
-      
-       <!-- SHOW SUCCESS AND ERROR MESSAGES -->
+
+        <!-- SHOW SUCCESS AND ERROR MESSAGES -->
         {% if messages %}
-            <div class="mt-2">
-                {% for message in messages %}
-                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
-                          {{ message }}
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                {% endfor %}
-            </div>
+        <div class="mt-2">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endfor %}
+        </div>
         {% endif %}
 
         <!-- Cards -->
         <div class="row text-center g-4 mb-4">
           <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+            <div class="card border-0 shadow-sm bg-primary bg-opacity-10 card-summary">
               <div class="card-body">
                 <h6 class="fw-semibold text-uppercase">All Concern</h6>
                 <h3 class="fw-bold text-primary">{{ total_issue }}</h3>
@@ -116,7 +131,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+            <div class="card border-0 shadow-sm bg-warning bg-opacity-10 card-summary">
               <div class="card-body">
                 <h6 class="fw-semibold text-uppercase">Pending</h6>
                 <h3 class="fw-bold text-warning">{{ total_pending_issue }}</h3>
@@ -124,7 +139,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+            <div class="card border-0 shadow-sm bg-success bg-opacity-10 card-summary">
               <div class="card-body">
                 <h6 class="fw-semibold text-uppercase">Resolved</h6>
                 <h3 class="fw-bold text-success">{{ total_resolved_issue }}</h3>
@@ -132,7 +147,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card border-0 shadow-sm bg-info bg-opacity-10">
+            <div class="card border-0 shadow-sm bg-info bg-opacity-10 card-summary">
               <div class="card-body">
                 <h6 class="fw-semibold text-uppercase">Forwarded</h6>
                 <h3 class="fw-bold text-info">{{ total_forwarded_issue }}</h3>
@@ -160,7 +175,7 @@
               {% for issue in my_issues %}
               <tr>
                 <td>{{ issue.get_department_display }}</td>
-                <td >{{ issue.title }}</td>
+                <td>{{ issue.title }}</td>
                 <td>{{ issue.description }}</td>
                 <td>{{ issue.priority }}</td>
                 <td>
@@ -175,37 +190,105 @@
                 <td>{{ issue.date_submitted }}</td>
                 <td>
                   {% if issue.response %}
-                    <small>{{ issue.response }} <br>
+                  <small>{{ issue.response }} <br>
                     <span class="text-muted">By {{ issue.responded_by.get_role_display }} on {{ issue.response_date }}</span></small>
                   {% elif issue.status == "pending" %}
-                    <small class="text-muted">Waiting for response</small>
+                  <small class="text-muted">Waiting for response</small>
                   {% elif issue.status == "forwarded" and issue.forwarding_history.all %}
-                    {% for f in issue.forwarding_history.all %}
-                      <small>From {{ f.forwarded_by.get_role_display }} to {{ f.forwarded_to.get_role_display }}.<br>{{ f.note }}<br><span class="text-muted">On {{ f.date_forwarded }}</span></small> <br>
-                    {% endfor %}
+                  {% for f in issue.forwarding_history.all %}
+                  <small>From {{ f.forwarded_by.get_role_display }} to {{ f.forwarded_to.get_role_display }}.<br>{{ f.note }}<br><span class="text-muted">On {{ f.date_forwarded }}</span></small> <br>
+                  {% endfor %}
                   {% endif %}
                 </td>
                 <td>
                   {% if issue.status == "resolved" %}
-                  <a href="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}" class="btn btn-sm btn-outline-danger">
+                  <button class="btn btn-sm btn-outline-danger delete-btn" data-bs-toggle="modal"
+                    data-bs-target="#deleteModal" data-issue-id="{{ issue.pk }}" data-issue-title="{{ issue.title }}"
+                    data-delete-url="{% url 'chatisha_kca:delete-resolved-issue' issue.pk %}">
                     Delete
-                  </a>
+                  </button>
+
                   {% else %}
                   <button class="btn btn-sm btn-outline-secondary" disabled>Delete</button>
                   {% endif %}
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="8" class="text-center text-muted">No issues submitted yet.</td></tr>
+              <tr>
+                <td colspan="8" class="text-center text-muted">No issues submitted yet.</td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border border-warning rounded-2">
+              <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-bold text-uppercase" id="deleteModalLabel">Delete Resolved Issue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                <p class="text-muted small mb-3">Are you sure you want to permanently delete this issue?</p>
+                <p class="fw-semibold " id="issueTitle"></p>
+              </div>
+              <div class="modal-footer justify-content-center border-0">
+
+                <form id="deleteForm" method="post" action="">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger px-4 fw-semibold text-uppercase">Delete</button>
+                </form>
+                <button type="button" class="btn btn-outline-secondary fw-semibold text-uppercase"
+                  data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Issue Modal -->
+        <div class="modal fade" id="submitIssueModal" tabindex="-1" aria-labelledby="submitIssueLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border border-warning rounded-2">
+              <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-bold text-uppercase" id="submitIssueLabel">Submit Your Issue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <form id="submitIssueForm" method="post" action="{% url 'chatisha_kca:submit-issue' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                  <!-- Use same compact spacing as your delete modal -->
+                  <div class="mb-2">
+                    {{ issue_form.department }}
+                  </div>
+                  <div class="mb-2">
+                    {{ issue_form.title }}
+                  </div>
+                  <div class="mb-2">
+                    {{ issue_form.description }}
+                  </div>
+                  <div class="mb-2">
+                    {{ issue_form.priority }}
+                  </div>
+                </div>
+
+                <div class="modal-footer justify-content-center border-0">
+                  <button type="submit" class="btn btn-submit text-light px-4 fw-semibold text-uppercase w-100">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       <!-- Footer -->
       <footer class="footer-bg text-light text-center py-2 border-top border-warning mt-auto">
-        <small>© Chatisha KCA | Empowering Stakeholders' Voices | <span class="text-warning">KCA University</span></small>
+        <small>© Chatisha KCA | Empowering Stakeholders' Voices | <span class="text-warning">KCA
+            University</span></small>
       </footer>
     </div>
   </div>
