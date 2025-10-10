@@ -10,7 +10,9 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
 from datetime import timedelta
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.views import PasswordResetView
 
 # CREATE USER REGISTRATION VIEW
 def UserRegistration(request):
@@ -29,6 +31,9 @@ def UserRegistration(request):
 def UserLogin(request):
     if request.method == 'POST':
         log_form = UserLoginForm(request.POST)
+        
+        reset_form = PasswordResetForm()
+        
         if log_form.is_valid():       
             username = log_form.cleaned_data['username']
             password = log_form.cleaned_data['password']
@@ -43,8 +48,9 @@ def UserLogin(request):
             else:
                 messages.error(request, 'Invalid username or password')
     else:
-        log_form = UserLoginForm()          
-    return render(request, 'registration/login.html', {'log_form': log_form})
+        log_form = UserLoginForm()  
+        reset_form = PasswordResetForm()        
+    return render(request, 'registration/login.html', {'log_form': log_form, 'reset_form' : reset_form})
 
 # LOGOUT THE USER
 def UserLogout(request):
@@ -66,7 +72,7 @@ def StakeHoldersDashboard(request, filter_by=None):
     my_issues = IssueSubmissionModel.objects.filter(user = user, moved_to_faq=False).order_by('-date_submitted')
     
     # NOTIFICATIONS
-    notifications = Notification.objects.filter(user=user).order_by('-created_at') # The Last 5
+    notifications = Notification.objects.filter(user=user).order_by('-created_at')
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
     
     
@@ -353,3 +359,12 @@ def view_notification(request, pk):
         return redirect('chatisha_kca:stake-holders-dashboard')
     else:
         return redirect('chatisha_kca:dean-vc-hod-dashboard')
+
+# PASSWORD RESET
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    success_url = reverse_lazy('chatisha_kca:login')
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Password reset link sent, please check your email!')
+        return super().form_valid(form)

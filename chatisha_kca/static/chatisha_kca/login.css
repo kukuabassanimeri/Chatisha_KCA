@@ -11,15 +11,15 @@
 }
 
 /* Title */
-.login-title {
+.login-title, .reset-title {
     color: #182b5c;
 }
 
-.login-btn {
+.login-btn, .btn-reset {
     background-color: #182b5c !important;
 }
 
-.login-btn:hover {
+.login-btn:hover, .btn-reset:hover {
     background-color: #d0b126 !important;
 }
 

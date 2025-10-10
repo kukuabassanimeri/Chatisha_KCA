@@ -1,8 +1,10 @@
+from chatisha_kca.views import CustomPasswordResetView
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('', include('chatisha_kca.urls', namespace='chatisha_kca')),
@@ -11,11 +13,8 @@ urlpatterns = [
     
     # PASSWORD RESET CONFIGURATION
     path('password_reset/', 
-        auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'),
+        CustomPasswordResetView.as_view(template_name='registration/password_reset_form.html'),
          name='password_reset'),
-    path('password_reset/done/', 
-         auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),
-         name='password_reset_done'),
     path('reset/<uidb64>/<token>/', 
          auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),
          name='password_reset_confirm'),

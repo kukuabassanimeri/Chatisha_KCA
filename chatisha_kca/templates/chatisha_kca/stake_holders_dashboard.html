@@ -230,18 +230,15 @@
                 <h5 class="modal-title fw-bold text-uppercase" id="deleteModalLabel">Delete Resolved Issue</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body text-center">
-                <p class="text-muted small mb-3">Are you sure you want to permanently delete this issue?</p>
-                <p class="fw-semibold " id="issueTitle"></p>
+              <div class="modal-body text-start">
+                <p class="text-muted small mb-2">Are you sure you want to permanently delete this issue?</p>
               </div>
               <div class="modal-footer justify-content-center border-0">
 
-                <form id="deleteForm" method="post" action="">
+                <form id="deleteForm" method="post" class="w-100">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-danger px-4 fw-semibold text-uppercase">Delete</button>
+                  <button type="submit" class="btn px-4 fw-semibold text-uppercase w-100 d-block text-light btn-delete">Delete</button>
                 </form>
-                <button type="button" class="btn btn-outline-secondary fw-semibold text-uppercase"
-                  data-bs-dismiss="modal">Cancel</button>
               </div>
             </div>
           </div>

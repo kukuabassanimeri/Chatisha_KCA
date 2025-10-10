@@ -30,6 +30,6 @@ urlpatterns = [
     path('faq/', views.FAQList, name='faq'),   
     
     # NOTIFICATION
-    path('notification/<int:pk>/', views.view_notification, name = 'view-notification')
+    path('notification/<int:pk>/', views.view_notification, name = 'view-notification'),
     
 ]

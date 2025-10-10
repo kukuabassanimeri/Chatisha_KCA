@@ -41,11 +41,11 @@
 }
 
 /* SUBMIT ISSUE */
-.btn-submit {
+.btn-submit, .btn-delete {
     background-color: #002855;
 }
 
-.btn-submit:hover {
+.btn-submit:hover, .btn-delete:hover {
     background-color: #d0b126;
 }
 

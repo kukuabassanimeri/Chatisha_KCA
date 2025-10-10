@@ -1,62 +1,91 @@
 {% extends 'chatisha_kca/index.html' %}
 {% load static %}
 
-<!--CSS-->
 {% block css %}
 <link rel="stylesheet" href="{% static 'chatisha_kca/login.css' %}">
 {% endblock css %}
 
 {% block content %}
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100 login-bg" role="button">
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100 login-bg">
 
-    <div class="card shadow-lg border-0 p-4 login-card rounded-2 w-100">
-        <div class="text-center mb-4">
-            <img src="{% static 'media/kca-logo.png' %}" alt="KCA Logo" class="mb-3 rounded-circle w-25" role="button">
-            <h3 class="fw-bold text-uppercase login-title">Chatisha KCA</h3>
-            <p class="text-muted small mb-0">Sign in to continue</p>
-        </div>
-
-       <!-- SHOW SUCCESS AND ERROR MESSAGES -->
-        {% if messages %}
-            <div class="mt-2">
-                {% for message in messages %}
-                    {% if 'error' in message.tags %}
-                        <div class="alert alert-danger alert-dismissible fade show small" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <form method="post" class="mt-2">
-            {% csrf_token %}
-
-            <div class="mb-3 position-relative">
-                {{ log_form.username }}
-            </div>
-
-            <div class="mb-3 position-relative">
-                {{ log_form.password }}
-                <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" 
-                id="toggleIcon" role="button"></i>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 mt-2 login-btn border-0">Login</button>
-        </form>
-
-        <div class="text-center mt-2">
-            <a href="{% url 'password_reset' %}" class="text-decoration-none forgot-password d-block mb-2">Forgot Password?</a>
-            <p class="small mb-1 text-muted">Don't have an account?</p>
-            <a href="{% url 'chatisha_kca:register' %}" class="text-decoration-none register-link">Register</a>
-        </div>
+  <div class="card shadow-lg border-0 p-4 login-card rounded-2 w-100">
+    <div class="text-center mb-4">
+      <img src="{% static 'media/kca-logo.png' %}" alt="KCA Logo" class="mb-3 rounded-circle w-25">
+      <h3 class="fw-bold text-uppercase login-title">Chatisha KCA</h3>
+      <p class="text-muted small mb-0">Sign in to continue</p>
     </div>
-</div>
-    <script src="{% static 'javascript_files/login.js'%}"></script>
-{% endblock content %}
 
+    <!-- SHOW SUCCESS AND ERROR MESSAGES -->
+    {% if messages %}
+      <div class="mt-2">
+        {% for message in messages %}
+          {% if 'error' in message.tags %}
+            <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% else %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" class="mt-2">
+      {% csrf_token %}
+      <div class="mb-3 position-relative">
+        {{ log_form.username }}
+      </div>
+
+      <div class="mb-3 position-relative">
+        {{ log_form.password }}
+        <i class="bi bi-eye position-absolute top-50 end-0 translate-middle-y me-3" id="toggleIcon" role="button"></i>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2 login-btn border-0">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <!-- Trigger Modal -->
+      <a href="#" class="text-decoration-none forgot-password d-block mb-2" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+        Forgot Password?
+      </a>
+      <p class="small mb-1 text-muted">Don't have an account?</p>
+      <a href="{% url 'chatisha_kca:register' %}" class="text-decoration-none register-link">Register</a>
+    </div>
+  </div>
+</div>
+
+<!-- 🔒 Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border border-warning">
+      <div class="modal-header">
+        <h5 class="modal-title text-uppercase reset-title fw-semibold" id="forgotPasswordModalLabel">Reset Your Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <form method="post" action="{% url 'password_reset' %}" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <input 
+              type="email" 
+              name="email" 
+              class="form-control" 
+              placeholder="Enter your registered email" 
+              required
+            >
+          </div>
+          <button type="submit" class="btn btn-reset w-100 text-light">Send Reset Link</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'javascript_files/login.js'%}"></script>
+{% endblock content %}
