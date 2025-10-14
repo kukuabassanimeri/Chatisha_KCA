@@ -160,7 +160,7 @@ def DeanVcHoDDashboard(request, filter_by=None):
     ).order_by('-date_submitted')
     
     # NOTIFY ADMINS FOR INCOMING ISSUE.
-    notifications = Notification.objects.filter(user=user).order_by('-created_at')[:5]
+    notifications = Notification.objects.filter(user=user).order_by('-created_at')
     unread_count = Notification.objects.filter(user=user, is_read=False).count()
     
     # KEEP TRACK OF ALL SUBMITTED ISSUES

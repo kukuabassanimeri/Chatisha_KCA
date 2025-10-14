@@ -1,23 +1,74 @@
 {% extends 'chatisha_kca/index.html' %}
 {% load static %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'chatisha_kca/stakeholder.css' %}">
+{% endblock css %}
+
 {% block content %}
-    <h2>Issue Detail</h2>
+<div class="container py-5 d-flex justify-content-center">
+    <div class="card shadow-lg border-0 rounded-3" style="width: 50%;">
+        <div
+            class="card-header border-bottom border-warning bg-white d-flex justify-content-between align-items-center">
+            <h5 class="text-uppercase fw-bold issue-title mb-0">Issue Detail</h5>
+        </div>
 
-    <p><strong>From:</strong> {{ issue_detail.user.username }}</p>
-    <p><strong>Title:</strong> {{ issue_detail.title }}</p>
-    <p><strong>Description:</strong> {{ issue_detail.description }}</p>
-    <p><strong>Priority:</strong> {{ issue_detail.get_priority_display }}</p>
-    <p><strong>Status:</strong> {{ issue_detail.status }}</p>
-    <p><strong>Date Submitted:</strong> {{ issue_detail.date_submitted }}</p>
+        <div class="card-body">
+            <p>From: <span class="text-muted">{{ issue_detail.user.username }}</span></p>
+            <p>Title: <span class="text-muted">{{ issue_detail.title }}</span></p>
+            <p>Description: <span class="text-muted">{{ issue_detail.description }}</span></p>
+            <p>Priority: <span class="text-muted">{{ issue_detail.get_priority_display }}</span></p>
+            <p>Status: <span class="text-muted">{{ issue_detail.status }}</span></p>
+            <p>Date Submitted: <span class="text-muted">{{ issue_detail.date_submitted }}</span></p>
+        </div>
 
-    <a href="{% url 'chatisha_kca:issue-respond' issue_detail.pk %}">
-        <button type="button">Respond</button>
-    </a>
+        <div class="card-footer border-top border-warning bg-white text-center">
+            <!-- Respond button triggers modal -->
+            <a href="#" class="text-uppercase text-decoration-none m-3 fw-semibold" data-bs-toggle="modal"
+                data-bs-target="#respondModal">
+                Respond
+            </a>
 
-     <a href="{% url 'chatisha_kca:forward-issue' issue_detail.pk %}">
-        <button type="button">Forward</button>
-    </a>
-     <p><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard' %}">Back to Dashboard</a></p>
+            <a href="{% url 'chatisha_kca:forward-issue' issue_detail.pk %}"
+                class="text-uppercase text-decoration-none fw-semibold">
+                Forward
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Respond Modal -->
+<div class="modal fade" id="respondModal" tabindex="-1" aria-labelledby="respondModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="respondModalLabel">Respond to Issue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" action="{% url 'chatisha_kca:issue-respond' issue_detail.pk %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="response" class="form-label">Response</label>
+                        <textarea id="response" name="response" rows="4" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="pending">Pending</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="forwarded">Forwarded</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100">Submit Response</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}
-

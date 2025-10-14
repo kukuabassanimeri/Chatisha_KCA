@@ -23,7 +23,6 @@ setTimeout(() => {
     });
 }, 6000) //* Fade out after 4 seconds
 
-//* TOGGLE + - FOR MY CONCERNS
 document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('concernToggle');
   const icon = toggle.querySelector('.toggle-icon');
@@ -36,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //* DELETE ISSUE POP UP BUTTON
 document.addEventListener("DOMContentLoaded", function () {
   const deleteButtons = document.querySelectorAll(".delete-btn");
+  const issueTitle = document.getElementById("issueTitle");
   const deleteForm = document.getElementById("deleteForm");
 
   deleteButtons.forEach(button => {

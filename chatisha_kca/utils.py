@@ -86,14 +86,16 @@ def auto_forward_overdue_issue():
 
     def get_overstayed_duration(issue):
         # THE NUMBER OF DAYS ISSUE OVERSTAYED
-        '''
+       
         days = (timezone.now() - issue.date_submitted).days
         return f"{days} day{'s' if days != 1 else ''}" if days > 0 else "less than a day"
-        '''
+        
         # Now testing with Minutes.
+        '''
         delta = timezone.now() - issue.date_submitted
         minutes = delta.seconds // 60
         return f"{minutes} minute{'s' if minutes != 1 else ''}" if minutes > 0 else "less than a minute"
+        '''
 
     for issue in overdue_issues:
         hod = issue.current_owner
@@ -132,7 +134,7 @@ def auto_forward_overdue_issue():
     overdue_dean_issues = IssueSubmissionModel.objects.filter(
         status="forwarded",
         current_owner__role__startswith="dean_",
-        date_submitted__lte=timezone.now() - timedelta(minutes = 50)  # maybe longer wait
+        date_submitted__lte=timezone.now() - timedelta(days = 5)  # maybe longer wait
     )
 
     for issue in overdue_dean_issues:

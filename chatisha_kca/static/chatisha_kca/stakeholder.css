@@ -10,7 +10,7 @@
     background-color: #d0b126;
 }
 
-.fw-semibold, .fw-bold {
+.fw-semibold, .fw-bold, #issueTitle, .issue-title {
     color: #182b5c;
 }
 
@@ -41,11 +41,11 @@
 }
 
 /* SUBMIT ISSUE */
-.btn-submit, .btn-delete {
+.btn-submit, .btn-delete, .btn-respond, .btn-forward {
     background-color: #002855;
 }
 
-.btn-submit:hover, .btn-delete:hover {
+.btn-submit:hover, .btn-delete:hover, .btn-respond:hover, .btn-forward:hover {
     background-color: #d0b126;
 }
 
@@ -89,4 +89,9 @@
         width: 300px; 
         max-height: 300px; 
         overflow-y: auto; 
+    }
+
+    /* ADMINSTRATION DASHBOARD */
+    .modal-body, p {
+        color: #002855;
     }
