@@ -95,3 +95,7 @@
     .modal-body, p {
         color: #002855;
     }
+
+    .noti-hover:hover{
+        background-color: #d0b126;
+    }

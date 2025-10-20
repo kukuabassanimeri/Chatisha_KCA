@@ -77,9 +77,9 @@
 
               <ul class="dropdown-menu dropdown-menu-end shadow border border-warning noti-card">
                 {% for notif in notifications %}
-                <li class="p-2 border-bottom {% if not notif.is_read %}bg-light{% endif %}">
+                <li class="p-2 border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
                   <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
-                    class="text-decoration-none text-dark d-block">
+                    class="text-decoration-none text-dark d-block noti-hover">
                     <small>{{ notif.message }}</small><br>
                     <span class="text-muted small fst-italic">{{ notif.created_at|timesince }} ago</span>
                   </a>
@@ -108,16 +108,23 @@
       <!-- Dashboard Content -->
       <main class="flex-grow-1 px-4 py-4">
 
-        <!-- SHOW SUCCESS AND ERROR MESSAGES -->
+         <!-- SHOW SUCCESS AND ERROR MESSAGES -->
         {% if messages %}
-        <div class="mt-2">
-          {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <div class="mt-2">
+            {% for message in messages %}
+              {% if 'error' in message.tags %}
+                <div class="alert alert-danger alert-dismissible fade show small" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% else %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show small" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endif %}
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
         {% endif %}
 
         <!-- Cards -->
@@ -261,7 +268,7 @@
               <form id="submitIssueForm" method="post" action="{% url 'chatisha_kca:submit-issue' %}">
                 {% csrf_token %}
                 <div class="modal-body">
-                  <!-- Use same compact spacing as your delete modal -->
+                  <!-- Use same compact spacing as delete modal -->
                   <div class="mb-2">
                     {{ issue_form.department }}
                   </div>

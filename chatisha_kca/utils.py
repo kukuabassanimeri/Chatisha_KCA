@@ -77,11 +77,12 @@ def get_forwardable_user(current_user):
     return CustomUser.objects.filter(role__in = allowed_role)
 
 def auto_forward_overdue_issue():
-    # Get all pending issues older than 2 days
+    
+    # Get all pending issues older than number of days.
     overdue_issues = IssueSubmissionModel.objects.filter(
         status="pending",
         current_owner__role__startswith="hod_",
-        date_submitted__lte=timezone.now() - timedelta(minutes = 50)
+        date_submitted__lte=timezone.now() - timedelta(days = 5)
     )
 
     def get_overstayed_duration(issue):
@@ -100,7 +101,7 @@ def auto_forward_overdue_issue():
     for issue in overdue_issues:
         hod = issue.current_owner
 
-        # Find the first dean available (you can refine mapping later)
+        # Find the first dean available
         dean = CustomUser.objects.filter(role__startswith="dean_").first()
         
         if dean:
@@ -122,12 +123,12 @@ def auto_forward_overdue_issue():
             Notification.objects.create(
                 user=dean,
                 issue=issue,
-                message=f'Issue "{issue.title}" was auto-forwarded to you from {hod.get_role_display()} after no action was taken for {get_overstayed_duration(issue)}.'
+                message=f'{issue.title} was auto-forwarded to you from {hod.get_role_display()} after no action was taken for {get_overstayed_duration(issue)}.'
             )
             Notification.objects.create(
                 user=issue.user,
                 issue=issue,
-                message=f'Your issue "{issue.title}" was escalated from {hod.get_role_display()} to {dean.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
+                message=f'{issue.title} was escalated from {hod.get_role_display()} to {dean.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
             )
         
     # ESCALATE OVERDUE ISSUE FROM DEAN TO VC DASHBOARD
@@ -156,10 +157,10 @@ def auto_forward_overdue_issue():
             Notification.objects.create(
                 user=issue.user,
                 issue=issue,
-                message=f'Your issue "{issue.title}" was escalated from {dean.get_role_display()} to {vc.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
+                message=f'{issue.title} was escalated from {dean.get_role_display()} to {vc.get_role_display()} after no response for {get_overstayed_duration(issue)}.'
             )
             Notification.objects.create(
                 user=vc,
                 issue=issue,
-                message=f'Issue "{issue.title}" was auto-forwarded from {dean.get_role_display()} to you after no action was taken for {get_overstayed_duration(issue)}.'
+                message=f'{issue.title} was auto-forwarded from {dean.get_role_display()} to you after no action was taken for {get_overstayed_duration(issue)}.'
             )

@@ -102,7 +102,7 @@ class ForwardingHistoryModel(models.Model):
     issue = models.ForeignKey(IssueSubmissionModel, on_delete=models.CASCADE, related_name='forwarding_history')
     forwarded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='forwarded_from')
     forwarded_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='forwarded_to')
-    note = models.TextField(blank=True, null=True)
+    note = models.TextField(max_length = 100, default= 'Reason')
     date_forwarded = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

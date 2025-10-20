@@ -219,15 +219,16 @@ def SubmitIssue(request):
                 Notification.objects.create(
                     user=hod_user,
                     issue=issue,
-                    message=f'New issue {issue.title} has been raised by {request.user.get_role_display()}.'
+                    message=f'{issue.title} has been raised by {request.user.get_role_display()}.'
                 )
                 
-                messages.success(request, 'Issue submitted successfully to HOD.')
+                hod_display_name = hod_user.get_role_display()
+                messages.success(request, f'Issue submitted successfully to {hod_display_name}.')
                 return RedirectBasedOnRole(request.user) # DYNAMIC USER DIRECT UPON ISSUE SUBMISSION
             
             else:
                 messages.error(request, 'Cannot submit: No HOD assigned for the selected department.')
-                return redirect('chatisha_kca:submit-issue')
+                return redirect('chatisha_kca:stake-holders-dashboard')
     else:
         issue_form = IssueSubmissionForm()
     return render(request, 'chatisha_kca/submit_issue.html', {'issue_form': issue_form})
@@ -235,7 +236,11 @@ def SubmitIssue(request):
 # COMPLAINT DETAIL
 def IssueDetail(request, pk):
     issue_detail = get_object_or_404(IssueSubmissionModel, pk=pk)
-    return render(request, 'chatisha_kca/issue_detail.html', {'issue_detail': issue_detail})
+    forwardable_users = get_forwardable_user(request.user)
+    return render(request, 'chatisha_kca/issue_detail.html', {
+        'issue_detail' : issue_detail,
+        'forwardable_users' : forwardable_users
+    })
 
 # HoD, DEAN, VC RESPOND TO ISSUE
 @role_required([
@@ -288,7 +293,7 @@ def IssueRespond(request, pk):
                         message=f'{issue.title} you forwarded has been resolved by {request.user.get_role_display()}.'
                     )
                     notified_users.add(f.forwarded_by)
-
+        messages.success(request, 'Respond submitted successfully')
         return redirect('chatisha_kca:dean-vc-hod-dashboard')
     
     return render(request, 'chatisha_kca/issue_respond.html', {'issue': issue})
@@ -332,7 +337,8 @@ def ForwardIssue(request, pk):
                 issue=issue,
                 message=f'{issue.title} has been forwarded to you by {request.user.get_role_display()}.'
             )
-
+            
+        messages.success(request, 'Issue forwarded successfully')
         return redirect('chatisha_kca:dean-vc-hod-dashboard')
 
     # Filter only users who can receive issues (HoD, Dean, VC)

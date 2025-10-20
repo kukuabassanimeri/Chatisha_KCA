@@ -2,28 +2,5 @@
 {% load static %}
 
 {% block content %}
-    <h3>Forward Issue: {{ issue.title }}</h3>
 
-    <form method="post">
-        {% csrf_token %}
-        
-        <label for="forward_to">Forward To:</label>
-        <select id="forward_to" name="forward_to" required>
-            {% for user in forwardable_users %}
-                <option value="{{ user.id }}">{{ user.get_role_display }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <label for="status">Status:</label>
-        <select id="status" name="status">
-            <option value="forwarded" selected>Forwarded</option>
-            <option value="pending">Pending</option>
-            <option value="resolved">Resolved</option>
-        </select><br><br>
-
-        <label for="note">Reason / Note (optional):</label><br>
-        <textarea name="note" id="note" rows="3"></textarea><br><br>
-
-        <button type="submit">Forward</button>
-    </form>
 {% endblock content %}

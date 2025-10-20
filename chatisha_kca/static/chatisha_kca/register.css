@@ -1,9 +1,3 @@
-/* Background image */
-.register-bg {
-    background: url("../media/kca-bg.jpeg") no-repeat center center fixed;
-    background-size: cover;
-}
-
 /* Main card styling */
 .register-card {
     max-width: 450px;

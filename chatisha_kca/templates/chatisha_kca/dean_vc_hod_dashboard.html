@@ -69,8 +69,8 @@
 
               <ul class="dropdown-menu dropdown-menu-end shadow border border-warning noti-card">
                 {% for notif in notifications %}
-                <li class="p-2 border-bottom {% if not notif.is_read %}bg-light{% endif %}">
-                  <a href="{% url 'chatisha_kca:view-notification' notif.id %}" class="text-decoration-none text-dark d-block">
+                <li class="p-2 border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
+                  <a href="{% url 'chatisha_kca:view-notification' notif.id %}" class="text-decoration-none text-dark d-block noti-hover">
                     <small>{{ notif.message }}</small><br>
                     <span class="text-muted small fst-italic">{{ notif.created_at|timesince }} ago</span>
                   </a>
@@ -179,9 +179,15 @@
                 </td>
                 <td>{{ issue.date_submitted }}</td>
                 <td>
-                  <a href="{% url 'chatisha_kca:issue-detail' issue.pk %}" class="btn btn-sm btn-outline-primary">
-                    View
-                  </a>
+                  {% if issue.status == 'resolved' %}
+                    <button class="btn btn-sm btn-outline-secondary" disabled>
+                      View
+                    </button>
+                  {% else %}
+                    <a href="{% url 'chatisha_kca:issue-detail' issue.pk %}" class="btn btn-sm btn-outline-primary">
+                      View
+                    </a>
+                  {% endif %}
                 </td>
                 <td>
                   {% if issue.response %}
