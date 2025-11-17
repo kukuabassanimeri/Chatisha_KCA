@@ -99,3 +99,8 @@
     .noti-hover:hover{
         background-color: #d0b126;
     }
+    .noti-hover a {
+        display: block;
+        width: 100%;
+        padding: 8px 10px;
+    }

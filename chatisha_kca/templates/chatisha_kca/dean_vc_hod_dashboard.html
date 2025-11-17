@@ -42,7 +42,7 @@
         </li>
 
         <li class="nav-item mb-2">
-          <a href="#" class="nav-link text-light fw-semibold text-uppercase">Reports</a>
+          <a href="{% url 'chatisha_kca:report' %}" class="nav-link text-light fw-semibold text-uppercase">Reports</a>
         </li>
       </ul>
     </div>
@@ -69,7 +69,7 @@
 
               <ul class="dropdown-menu dropdown-menu-end shadow border border-warning noti-card">
                 {% for notif in notifications %}
-                <li class="p-2 border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
+                <li class="border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
                   <a href="{% url 'chatisha_kca:view-notification' notif.id %}" class="text-decoration-none text-dark d-block noti-hover">
                     <small>{{ notif.message }}</small><br>
                     <span class="text-muted small fst-italic">{{ notif.created_at|timesince }} ago</span>
@@ -179,7 +179,7 @@
                 </td>
                 <td>{{ issue.date_submitted }}</td>
                 <td>
-                  {% if issue.status == 'resolved' %}
+                  {% if issue.status == 'resolved' or issue.status == 'forwarded' %}
                     <button class="btn btn-sm btn-outline-secondary" disabled>
                       View
                     </button>

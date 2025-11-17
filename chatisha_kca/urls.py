@@ -32,4 +32,7 @@ urlpatterns = [
     # NOTIFICATION
     path('notification/<int:pk>/', views.view_notification, name = 'view-notification'),
     
+    # GENERATE PDF REPORT
+    path('report/', views.ReportPdf, name = 'report')
+    
 ]

@@ -77,7 +77,7 @@
 
               <ul class="dropdown-menu dropdown-menu-end shadow border border-warning noti-card">
                 {% for notif in notifications %}
-                <li class="p-2 border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
+                <li class="border-bottom noti-hover {% if not notif.is_read %} bg-light {% endif %}">
                   <a href="{% url 'chatisha_kca:view-notification' notif.id %}"
                     class="text-decoration-none text-dark d-block noti-hover">
                     <small>{{ notif.message }}</small><br>
