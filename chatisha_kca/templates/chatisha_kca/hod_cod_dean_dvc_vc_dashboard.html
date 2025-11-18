@@ -20,7 +20,7 @@
 
       <ul class="nav flex-column w-100 px-3">
         <li class="nav-item mb-2">
-          <a href="{% url 'chatisha_kca:dean-vc-hod-dashboard' %}" class="nav-link text-light fw-semibold text-uppercase">
+          <a href="{% url 'chatisha_kca:hod-cod-dean-dvc-vc-dashboard' %}" class="nav-link text-light fw-semibold text-uppercase">
             Dashboard
           </a>
         </li>
@@ -34,10 +34,10 @@
             <span class="ms-2 toggle-icon">+</span>
           </a>
           <ul class="collapse ps-3 mt-1 list-unstyled" id="complaintsMenu">
-            <li><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard' %}" class="nav-link text-light">All Complaints</a></li>
-            <li><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard-filter' 'pending' %}" class="nav-link text-light">Pending</a></li>
-            <li><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard-filter' 'resolved' %}" class="nav-link text-light">Resolved</a></li>
-            <li><a href="{% url 'chatisha_kca:dean-vc-hod-dashboard-filter' 'forwarded' %}" class="nav-link text-light">Forwarded</a></li>
+            <li><a href="{% url 'chatisha_kca:hod-cod-dean-dvc-vc-dashboard' %}" class="nav-link text-light">All Complaints</a></li>
+            <li><a href="{% url 'chatisha_kca:hod-cod-dean-dvc-vc-dashboard-filter' 'pending' %}" class="nav-link text-light">Pending</a></li>
+            <li><a href="{% url 'chatisha_kca:hod-cod-dean-dvc-vc-dashboard-filter' 'resolved' %}" class="nav-link text-light">Resolved</a></li>
+            <li><a href="{% url 'chatisha_kca:hod-cod-dean-dvc-vc-dashboard-filter' 'forwarded' %}" class="nav-link text-light">Forwarded</a></li>
           </ul>
         </li>
 
@@ -179,7 +179,7 @@
                 </td>
                 <td>{{ issue.date_submitted }}</td>
                 <td>
-                  {% if issue.status == 'resolved' or issue.status == 'forwarded' %}
+                  {% if issue.status == 'resolved' %}
                     <button class="btn btn-sm btn-outline-secondary" disabled>
                       View
                     </button>

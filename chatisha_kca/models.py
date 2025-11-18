@@ -11,21 +11,25 @@ class CustomUser(AbstractUser):
         
         # STAKEHOLDER ROLE
         ('student', 'Student'),
-        ('parent', 'Parent'),
-        ('sponsor', 'Sponsor'),
-        ('non_teaching_staff', 'Non-teaching Staff'),
         
-        # HoD ROLE
-        ('hod_bsd', 'Head of department BSD'),
-        ('hod_bac', 'Head of Department BAC'),
-        ('hod_bbit', 'Head of Department BBIT'),
-        ('hod_bit', 'Head of Department BIT'),
+        # HoD AND CoD ROLE
+        ('admin_assistant', 'Admin Assistant'),
+        ('faculty_manager', 'Faculty Manager'),
+        ('hod_time_tabling', 'HoD Timetabling'),
+        ('cod_nac', 'CoD NAC'),
+        ('hod_exam_nac', 'HoD Exam NAC'),
+        ('cod_sdis', 'CoD SDIS'),
+        ('hod_exam_sdis', 'HoD Exam SDIS'),
+        ('cod_dsai', 'CoD SDAI'),
+        ('hod_exam_sdai', 'HoD Exam SDAI'),
+        ('hod_student_attachment', 'HoD Student Attachment'),
+        ('hod_projects', 'HoD Projects'),
         
         # DEAN ROLE
-        ('dean_sot', 'Dean school of Technology'),
-        ('dean_student', 'Dean of Student'),
-        ('dean_sob', 'Dean school of Business'),
-        ('dean_school_of_education_art', 'Dean School of Education & Art'),
+        ('dean_sot', 'Dean SOT'),
+        
+        # DVC
+        ('dvc_asa', 'DVC ASA'),
         
         # VC ROLE
         ('vc', 'VC'),
@@ -37,17 +41,24 @@ User = get_user_model()
 
 DEPARTMENT_CHOICES = [
     
-    # HoD
-    ('bsd', 'Head of Department BSD'),
-    ('bac', 'Head of Department BAC'),
-    ('bbit', 'Head of Department BBIT'),
-    ('bit', 'Head of Department BIT'),
+    # HoD and CoD  
+    ('admin', 'Admin Assistant'),
+    ('faculty', 'Faculty Manager'),
+    ('hodtt', 'HoD Timetabling'),
+    ('codnac', 'CoD NAC'),
+    ('hodexamnac', 'HoD Exam Nac'),
+    ('codsdis', 'CoD SDIS'),
+    ('hodexamsdis', 'HoD Exam SDIS'),
+    ('coddsai', 'CoD DSAI'),
+    ('hodexamdsai', 'HoD Exam DSAI'),
+    ('hodstudentattachment', 'HoD Student Attachment'),
+    ('hodprojects', 'HoD Projects'),
     
     # DEAN
-    ('sot', 'Dean School of Technology'),
-    ('dos', 'Dean of Students'),
-    ('sob', 'Dean School of Business'),
-    ('sea', 'Dean School of education & Art'),
+    ('deansot', 'Dean SOT'),
+    
+    # DVC
+    ('dvcasa', 'DVC ASA'),    
     
     # VC
     ('vc_ceo', 'VC & CEO'),
@@ -110,7 +121,7 @@ class ForwardingHistoryModel(models.Model):
     
 # FAQ MODEL
 class FAQModel(models.Model):
-    question = models.TextField() # The original question description.
+    question = models.TextField(unique = True) # The original question description.
     answer = models.TextField() # The resolved respond.
     
     def __str__(self):
@@ -126,14 +137,3 @@ class Notification(models.Model):
     
     def __str__(self):
         return f"Notification for {self.user.username} - {self.message[:30]}"
-
-# USER PROFILE
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(
-        upload_to = 'avatars/',
-        default = 'default.png',
-        blank = True
-    )
-    def __str__(self):
-        return self.user.username

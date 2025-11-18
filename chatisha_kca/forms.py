@@ -49,7 +49,6 @@ class CustomUserCreationform(UserCreationForm):
         # Remove label suffix
         self.label_suffix = ''
         
-
     # CHECK IF USERNAME & EMAIL EXIST
     
     def clean_username(self):
@@ -101,7 +100,6 @@ class CustomUserCreationform(UserCreationForm):
 
         return cleaned_data
     
-    
 # USER LOGIN
 class UserLoginForm(forms.Form):
     username = forms.CharField(
@@ -149,9 +147,20 @@ class IssueSubmissionForm(forms.ModelForm):
             'class': 'form-select'
         })
         
-        
-        # Filter department choices to only HODs
-        hod_departments = ['bsd', 'bac', 'bbit', 'bit']
+        # Filter department choices to only HOD and CoD
+        hod_departments = [
+            'admin', 
+            'faculty', 
+            'hodtt', 
+            'codnac',
+            'hodexamnac',
+            'codsdis',
+            'hodexamsdis',
+            'coddsai',
+            'hodexamdsai',
+            'hodstudentattachment',
+            'hodprojects',
+            ]
         hod_choices = [choice for choice in IssueSubmissionModel._meta.get_field('department').choices if choice[0] in hod_departments]
 
         self.fields['department'] = forms.ChoiceField(

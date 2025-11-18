@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .utils import RedirectBasedOnRole, ROLE_TO_DEPARTMENT, get_forwardable_user, auto_forward_overdue_issue
 from .decorators import role_required
-from .models import (IssueSubmissionModel, ForwardingHistoryModel, User, FAQModel, CustomUser, Notification, UserProfile)
+from .models import (IssueSubmissionModel, ForwardingHistoryModel, User, FAQModel, CustomUser, Notification)
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
@@ -15,9 +15,9 @@ from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.views import PasswordResetView
 
 # GENERATE REPORT IN PDF
-from reportlab.pdfgen import canvas
+from reportlab.pdfgen import canvas # type: ignore
 from django.http import HttpResponse
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4 # type: ignore
 from datetime import datetime
 
 
@@ -68,9 +68,6 @@ def UserLogout(request):
 # STAKE HOLDERS DASHBOARD
 @role_required([
     'student', 
-    'parent', 
-    'sponsor', 
-    'non_teaching_staff',
     ])
 def StakeHoldersDashboard(request, filter_by=None):
     user = request.user
@@ -134,26 +131,33 @@ def DeleteResolvedIssue(request, pk):
             return redirect('chatisha_kca:stake-holders-dashboard')
     return render(request, 'chatisha_kca/delete_resolved_issue.html', {'resolved_issue': resolved_issue})
            
-# HoD, DEAN, & VC DASHBOARD
+# HoD, CoD, DEAN, DVC, & VC DASHBOARD
 @role_required([
-    
-    # HoD
-    'hod_bsd',
-    'hod_bac',
-    'hod_bbit',
-    'hod_bit',
+
+    # HoD AND CoD
+    'admin_assistant',
+    'faculty_manager',
+    'hod_time_tabling',
+    'cod_nac',
+    'hod_exam_nac',
+    'cod_sdis',
+    'hod_exam_sdis',
+    'cod_dsai',
+    'hod_exam_sdai',
+    'hod_student_attachment',
+    'hod_projects',
     
     # DEAN
-    'dean_sot',  
-    'dean_student',
-    'dean_sob',
-    'dean_school_of_education_art',
+    'dean_sot', 
+    
+    # DVC
+    'dvc_asa', 
     
     #VC
     'vc',
 ])
 
-def DeanVcHoDDashboard(request, filter_by=None):
+def HoDCodDeanDvcVcDashboard(request, filter_by=None):
     user = request.user
     
     auto_forward_overdue_issue()
@@ -173,7 +177,6 @@ def DeanVcHoDDashboard(request, filter_by=None):
     # KEEP TRACK OF ALL SUBMITTED ISSUES
     total_issue = submitted_issues.count()
     
-    
     # KEEP TRACK OF ALL PENDING / RESOLVED / FORWARDED ISSUES
     total_pending = submitted_issues.filter(status = 'pending').count()
     total_resolved = submitted_issues.filter(status = 'resolved').count()
@@ -189,7 +192,7 @@ def DeanVcHoDDashboard(request, filter_by=None):
     else:
         pass
     
-    return render(request, 'chatisha_kca/dean_vc_hod_dashboard.html', {
+    return render(request, 'chatisha_kca/hod_cod_dean_dvc_vc_dashboard.html', {
         'submitted_issues': submitted_issues,
         'filter_by': filter_by or 'all',
         'total_issue': total_issue,
@@ -200,7 +203,7 @@ def DeanVcHoDDashboard(request, filter_by=None):
         'unread_count': unread_count
     })
 
-# SUBMIT ISSUE - STUDENT, PARENT, SPONSORS, NON-TEACHING STAFFS.
+# SUBMIT ISSUE - STUDENT
 @login_required
 def SubmitIssue(request):
     if request.method == 'POST':
@@ -211,10 +214,17 @@ def SubmitIssue(request):
             
             # Assign current_owner based on selected department
             hod_role_map = {
-                'bsd': 'hod_bsd',
-                'bac': 'hod_bac',
-                'bbit': 'hod_bbit',
-                'bit': 'hod_bit',
+                'admin': 'admin_assistant',
+                'faculty' : 'faulty_manager',
+                'hodtt' : 'hod_time_tabling',
+                'codnac' : 'cod_nac',
+                'hodexamnac' : 'hod_exam_nac',
+                'codsdis' : 'cod_sdis',
+                'hodexamsdis' : 'hod_exam_sdis',
+                'coddsai' : 'cod_dsai',
+                'hodexamdsai' : 'hod_exam_sdai',
+                'hodstudentattachment' : 'hod_student_attachment',
+                'hodprojects' :  'hod_projects',
             }
             selected_dept = issue_form.cleaned_data['department']
             hod_user = CustomUser.objects.filter(role=hod_role_map[selected_dept]).first()
@@ -235,7 +245,7 @@ def SubmitIssue(request):
                 return RedirectBasedOnRole(request.user) # DYNAMIC USER DIRECT UPON ISSUE SUBMISSION
             
             else:
-                messages.error(request, 'Cannot submit: No HOD assigned for the selected department.')
+                messages.error(request, 'Cannot submit: No HOD or CoD assigned for the selected department.')
                 return redirect('chatisha_kca:stake-holders-dashboard')
     else:
         issue_form = IssueSubmissionForm()
@@ -250,20 +260,27 @@ def IssueDetail(request, pk):
         'forwardable_users' : forwardable_users
     })
 
-# HoD, DEAN, VC RESPOND TO ISSUE
+# HoD, CoD, DEAN, DVC, VC RESPOND TO ISSUE
 @role_required([
     
-    # HoD
-    'hod_bsd',
-    'hod_bac',
-    'hod_bbit',
-    'hod_bit',
+    # HoD AND CoD
+    'admin_assistant',
+    'faculty_manager',
+    'hod_time_tabling',
+    'cod_nac',
+    'hod_exam_nac',
+    'cod_sdis',
+    'hod_exam_sdis',
+    'cod_dsai',
+    'hod_exam_sdai',
+    'hod_student_attachment',
+    'hod_projects',
     
     # DEAN
     'dean_sot', 
-    'dean_student',
-    'dean_sob',  
-    'dean_school_of_education_art', 
+    
+    # DVC
+    'dvc_asa',
     
     # VC
     'vc',
@@ -302,11 +319,11 @@ def IssueRespond(request, pk):
                     )
                     notified_users.add(f.forwarded_by)
         messages.success(request, 'Respond submitted successfully')
-        return redirect('chatisha_kca:dean-vc-hod-dashboard')
+        return redirect('chatisha_kca:hod-cod-dean-dvc-vc-dashboard')
     
     return render(request, 'chatisha_kca/issue_respond.html', {'issue': issue})
 
-# FORWARD AN ISSUE TO RESPECTIVE HoD, DEAN OR VC AND VICE VERSE
+# FORWARD AN ISSUE TO RESPECTIVE HoD, CoD, DEAN, DVC OR VC
 @login_required
 def ForwardIssue(request, pk):
     issue = get_object_or_404(IssueSubmissionModel, pk=pk)
@@ -339,7 +356,7 @@ def ForwardIssue(request, pk):
                 message=f' {issue.title} has been {status_update} to {forward_to_user.get_role_display()}.'
             )
             
-             # Notify new owner (Dean, VC, etc.)
+            # Notify new owner (Dean, VC, etc.)
             Notification.objects.create(
                 user=forward_to_user,
                 issue=issue,
@@ -347,7 +364,7 @@ def ForwardIssue(request, pk):
             )
             
         messages.success(request, 'Issue forwarded successfully')
-        return redirect('chatisha_kca:dean-vc-hod-dashboard')
+        return redirect('chatisha_kca:hod-cod-dean-dvc-vc-dashboard')
 
     # Filter only users who can receive issues (HoD, Dean, VC)
     forwardable_users = get_forwardable_user(request.user)
@@ -369,10 +386,10 @@ def view_notification(request, pk):
     notif.save()
     
     # Redirect user back to their correct dashboard
-    if request.user.role in ['student', 'parent', 'sponsor', 'non_teaching_staff']:
+    if request.user.role in ['student']:
         return redirect('chatisha_kca:stake-holders-dashboard')
     else:
-        return redirect('chatisha_kca:dean-vc-hod-dashboard')
+        return redirect('chatisha_kca:hod-cod-dean-dvc-vc-dashboard')
 
 # PASSWORD RESET
 class CustomPasswordResetView(PasswordResetView):
@@ -407,7 +424,6 @@ def ReportPdf(request):
     # CREATE TEXT OBJECT
     p.setFont('Helvetica-Bold', 16)
    
-    
     p.drawString(200, 800, 'Chatisha KCA Report')
 
     p.setFont('Helvetica', 12)

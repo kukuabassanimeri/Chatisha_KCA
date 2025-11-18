@@ -14,8 +14,8 @@ urlpatterns = [
     path('stakeholdersdashboard/', views.StakeHoldersDashboard, name='stake-holders-dashboard'),
     path('stakeholdersdashboard/<str:filter_by>/', views.StakeHoldersDashboard, name='stake-holders-dashboard-filter'),
     
-    path('deanvchoddashboard/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard'),
-    path('deanvchoddashboard/<str:filter_by>/', views.DeanVcHoDDashboard, name='dean-vc-hod-dashboard-filter'),
+    path('hodcoddeandvcvcdashboard/', views.HoDCodDeanDvcVcDashboard, name='hod-cod-dean-dvc-vc-dashboard'),
+    path('hodcoddeandvcvcdashboard/<str:filter_by>/', views.HoDCodDeanDvcVcDashboard, name='hod-cod-dean-dvc-vc-dashboard-filter'),
     
     # ISSUE SUBMISSION URLS
     path('submitissue/', views.SubmitIssue, name='submit-issue'),
